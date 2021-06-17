@@ -1,7 +1,7 @@
 # Secure-Banking-System
 
 ## Requirements
-* [MySQL](https://www.mysql.com)
+* [MySQL](https://www.mysql.com) -> ``sudo apt-get install mysql-server``
 * Python 3.x
 * import cryptography  -> ``pip3 install cryptography``
 
