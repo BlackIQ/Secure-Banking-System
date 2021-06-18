@@ -15,17 +15,21 @@ class Client:
 				break
 			except:
 				print("Couldn't connect to server")
+		message = self.s.recv(1024).decode()
+		self.receive_message(message)
 
-		self.username = input('Enter username --> ')
-
-		self.send_message(self.username)
-		self.receive_message()
+		while True:
+			message = input('Secure Banking System> ')
+			self.send_message(message)
+			while True:
+				message = self.s.recv(4096).decode()
+				self.receive_message(message)
+				break
 
 	def send_message(self,message):
-		self.s.send(message.encode()) #Sending username for server
+		self.s.send(message.encode())
 
-	def receive_message(self):
-		message = self.s.recv(1024).decode()
+	def receive_message(self,message):
 		print("Server:", message)
 
 client = Client()

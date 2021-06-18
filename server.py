@@ -18,13 +18,20 @@ class Server:
 
 		while True:
 			self.c1, addr = self.s.accept()
-			username = self.c1.recv(1024).decode()
-			print("New connection. Username: "+str(username))
-			self.msg = "Your username is " + username
-			self.send_message(self.msg)
+			self.send_message("Successfully connected. \nYou can use help command for more information.")
+			break
+
+		while True:
+			msg = self.c1.recv(4096).decode()
+			self.receive_message(msg)
 
 	def send_message(self,message):
 		self.c1.send(message.encode())
 		print("Successfully sent")
+
+	def receive_message(self,message):
+		print("message:", message)
+		msg = "response from server. your message was:" + message
+		self.send_message(msg)
 
 server = Server()
