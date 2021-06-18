@@ -1,4 +1,4 @@
-# Secure-Banking-System
+# Secure-Banking-System :)
 
 ## Requirements
 * [MySQL](https://www.mysql.com) -> ``sudo apt-get install mysql-server``
