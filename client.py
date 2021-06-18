@@ -3,7 +3,6 @@ import socket
 class Client:
 	def __init__(self):
 		self.create_connection()
-
 	def create_connection(self):
 		self.s = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
 
@@ -18,9 +17,15 @@ class Client:
 				print("Couldn't connect to server")
 
 		self.username = input('Enter username --> ')
-		self.s.send(self.username.encode()) #Sending username for server
 
+		self.send_message(self.username)
+		self.receive_message()
+
+	def send_message(self,message):
+		self.s.send(message.encode()) #Sending username for server
+
+	def receive_message(self):
 		message = self.s.recv(1024).decode()
-		print("Server:",message)
+		print("Server:", message)
 
 client = Client()
