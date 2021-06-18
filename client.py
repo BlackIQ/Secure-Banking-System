@@ -30,6 +30,6 @@ class Client:
 		self.s.send(message.encode())
 
 	def receive_message(self,message):
-		print("Server:", message)
+		print(message)
 
 client = Client()

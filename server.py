@@ -31,7 +31,17 @@ class Server:
 
 	def receive_message(self,message):
 		print("message:", message)
-		msg = "response from server. your message was:" + message
-		self.send_message(msg)
+
+		if message == "Help" or message == "help":
+			self.send_message("Signup [username] [password]\nLogin [username] [password]")
+		elif message == "Signup" or message == "signup":
+			msg = "response from server. your message was:" + message
+			self.send_message(msg)
+		elif message == "Login" or message == "login":
+			msg = "response from server. your message was:" + message
+			self.send_message(msg)
+		else:
+			self.send_message("Please use help command")
+
 
 server = Server()
