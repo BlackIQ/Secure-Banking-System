@@ -4,7 +4,7 @@
 * [MySQL](https://www.mysql.com) -> ``sudo apt-get install mysql-server``
 * Python 3.x
 * import cryptography  -> ``pip3 install cryptography``
-* import mysql.connector -> ``pip3 install mysql-connector-python``
+* import mysql.connector -> ``python3 -m pip install mysql-connector``
 
 ## How to Run
 First of all:
