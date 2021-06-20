@@ -12,7 +12,6 @@ class Server:
 		self.start_server()
 		self.c1
 
-
 	def start_server(self):
 		self.s = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
 
@@ -73,4 +72,4 @@ class Server:
 			self.send_message("Please use help command")
 
 
-server = Server(Login(),Signup(),MysqlConnection())
+server = Server(Login(),Signup(MysqlConnection()),MysqlConnection())
