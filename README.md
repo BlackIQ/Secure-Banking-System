@@ -6,6 +6,8 @@
 * import cryptography  -> ``pip3 install cryptography``
 
 ## How to Run
+1. ``Python3 Server.py``
+2. ``Python3 Client.py``
 
 ## Support
 Reach out to us at:
