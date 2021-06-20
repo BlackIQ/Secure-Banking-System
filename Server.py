@@ -1,9 +1,11 @@
 import socket
 from Login import Login
+from Signup import Signup
 
 class Server:
-	def __init__(self,Login):
+	def __init__(self, Login, Signup):
 		self.Login = Login
+		self.Signup = Signup
 		self.start_server()
 		self.c1
 
@@ -37,17 +39,17 @@ class Server:
 
 		if message == "Help" or message == "help":
 			self.send_message("Signup [username] [password]\nLogin [username] [password]")
+
 		elif message == "Signup" or message == "signup":
-			# redirect to the corresponding class
-			msg = "response from server. your message was:" + message
-			self.send_message(msg)
-		elif message == "Login" or message == "login":
-			# redirect to the corresponding class
-			response = self.Login.login("1")
-			msg = "response from server. your message was:" + message
+			response = self.Signup.signup("2")
 			self.send_message(response)
+
+		elif message == "Login" or message == "login":
+			response = self.Login.login("1")
+			self.send_message(response)
+
 		else:
 			self.send_message("Please use help command")
 
 
-server = Server(Login())
+server = Server(Login(),Signup())
