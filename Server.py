@@ -47,14 +47,14 @@ class Server:
 
 		elif Parts[0] == "Signup" or Parts[0] == "signup":
 			if len(Parts) == 3:
-				response = self.Signup.signup("2")
+				response = self.Signup.signup(Parts[1], Parts[2])
 				self.send_message(response)
 			else:
 				self.send_message("Incorrect arguments. Please use help command")
 
 		elif Parts[0] == "Login" or Parts[0] == "login":
 			if len(Parts) == 3:
-				response = self.Login.login("1")
+				response = self.Login.login(Parts[1], Parts[2])
 				self.send_message(response)
 			else:
 				self.send_message("Incorrect arguments. Please use help command")
