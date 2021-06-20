@@ -4,6 +4,7 @@ from Signup import Signup
 
 class Server:
 	def __init__(self, Login, Signup):
+		self.Exit = 0
 		self.Login = Login
 		self.Signup = Signup
 		self.start_server()
@@ -27,8 +28,13 @@ class Server:
 			break
 
 		while True:
+			if self.Exit == 1:
+				self.send_message("Goodbye.")
+				break
 			msg = self.c1.recv(4096).decode()
 			self.receive_message(msg)
+
+		self.s.close()
 
 	def send_message(self,message):
 		self.c1.send(message.encode())
@@ -38,12 +44,9 @@ class Server:
 		print("Input command:", inputCommand)
 
 		Parts = inputCommand.split(" ")
-		print(Parts)
-		print(Parts[0])
-		print(len(Parts))
 
 		if Parts[0] == "Help" or Parts[0] == "help":
-			self.send_message("Signup [username] [password]\nLogin [username] [password]")
+			self.send_message("Signup [username] [password]\nLogin [username] [password]\nExit")
 
 		elif Parts[0] == "Signup" or Parts[0] == "signup":
 			if len(Parts) == 3:
@@ -58,6 +61,9 @@ class Server:
 				self.send_message(response)
 			else:
 				self.send_message("Incorrect arguments. Please use help command")
+
+		elif Parts[0] == "Exit" or Parts[0] == "exit":
+			self.Exit = 1
 
 		else:
 			self.send_message("Please use help command")

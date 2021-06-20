@@ -2,6 +2,7 @@ import socket
 
 class Client:
 	def __init__(self):
+		self.Exit = 0
 		self.create_connection()
 	def create_connection(self):
 		self.s = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
@@ -19,6 +20,8 @@ class Client:
 		self.receive_message(message)
 
 		while True:
+			if self.Exit == 1:
+				break
 			message = input('Secure Banking System> ')
 			self.send_message(message)
 			while True:
@@ -30,6 +33,10 @@ class Client:
 		self.s.send(message.encode())
 
 	def receive_message(self,message):
-		print(message)
+		if message == "Goodbye.":
+			print(message)
+			self.Exit = 1
+		else:
+			print(message)
 
 client = Client()
