@@ -34,19 +34,30 @@ class Server:
 		self.c1.send(message.encode())
 		print("Successfully sent")
 
-	def receive_message(self,message):
-		print("message:", message)
+	def receive_message(self, inputCommand):
+		print("Input command:", inputCommand)
 
-		if message == "Help" or message == "help":
+		Parts = inputCommand.split(" ")
+		print(Parts)
+		print(Parts[0])
+		print(len(Parts))
+
+		if Parts[0] == "Help" or Parts[0] == "help":
 			self.send_message("Signup [username] [password]\nLogin [username] [password]")
 
-		elif message == "Signup" or message == "signup":
-			response = self.Signup.signup("2")
-			self.send_message(response)
+		elif Parts[0] == "Signup" or Parts[0] == "signup":
+			if len(Parts) == 3:
+				response = self.Signup.signup("2")
+				self.send_message(response)
+			else:
+				self.send_message("Incorrect arguments. Please use help command")
 
-		elif message == "Login" or message == "login":
-			response = self.Login.login("1")
-			self.send_message(response)
+		elif Parts[0] == "Login" or Parts[0] == "login":
+			if len(Parts) == 3:
+				response = self.Login.login("1")
+				self.send_message(response)
+			else:
+				self.send_message("Incorrect arguments. Please use help command")
 
 		else:
 			self.send_message("Please use help command")
