@@ -43,7 +43,7 @@ class Server:
 	def receive_message(self, inputCommand):
 		print("Input command:", inputCommand)
 
-		Parts = inputCommand.split(" ")
+		Parts = inputCommand.split()
 
 		if Parts[0] == "Help" or Parts[0] == "help":
 			self.send_message("Signup [username] [password]\nLogin [username] [password]\nExit")
