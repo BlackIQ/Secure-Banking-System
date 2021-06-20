@@ -1,14 +1,26 @@
 import socket
 from Login import Login
 from Signup import Signup
+import mysql.connector
 
 class Server:
 	def __init__(self, Login, Signup):
 		self.Exit = 0
 		self.Login = Login
 		self.Signup = Signup
+		self.mysql_connection()
 		self.start_server()
 		self.c1
+		self.cnx
+		self.cursor
+
+	def mysql_connection(self):
+		self.cnx = mysql.connector.connect(user='root', password='10101010',
+		                              host='127.0.0.1',
+		                              database='secure_banking_system')
+		#self.cursor = self.cnx.cursor()
+		#self.cursor.execute('INSERT INTO conf(ID, conf_name) values(3 , \'classified\');')
+		#self.cnx.commit()
 
 	def start_server(self):
 		self.s = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
@@ -35,6 +47,8 @@ class Server:
 			self.receive_message(msg)
 
 		self.s.close()
+		self.cursor.close()
+		self.cnx.close()
 
 	def send_message(self,message):
 		self.c1.send(message.encode())
