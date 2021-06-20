@@ -6,6 +6,12 @@
 * import cryptography  -> ``pip3 install cryptography``
 
 ## How to Run
+First of all:
+1. ``mysql -u your_username -p your_password``
+2. ``use db_name``
+3. ``source <path_to_sql_file>/secure_banking_system.sql``
+
+Then:
 1. ``Python3 Server.py``
 2. ``Python3 Client.py``
 
