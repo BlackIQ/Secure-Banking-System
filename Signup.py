@@ -20,9 +20,11 @@ class Signup:
         if valid_username == 0:
             response = "This username exists. Please select another username."
         elif valid_password == 0:
-            response = "Your password is weak. Please select another password."
+            response = "Your password is short. It needs to be at least 8 characters."
         elif valid_password == -1:
-            response = "Your password is too short. Please select another password."
+            response = "Your password is weak. Please Use numbers, uppercase and lowercase letters in your password."
+        elif valid_password == -2:
+            response = "Your password is weak. Please use @ or _ or $ in your password."
         else:
             salt = self.base64_encode(os.urandom(12)) #Generate 12 bytes salt
             passwordWithSalt = salt + password
@@ -33,7 +35,7 @@ class Signup:
 
             self.MysqlConnection.insert_into_table(username, password_hash, salt, 1, 1, 1, "NULL", 0)
 
-            response = "Singup Successfully"
+            response = "Singup Successfully. Now you can Login."
 
         return response
 
@@ -41,18 +43,15 @@ class Signup:
         valid = 1
 
         if len(password) < 8:
-            valid = -1
+            valid = 0
         elif not re.search("[0-9]", password):
-            valid = 0
+            valid = -1
         elif not re.search("[A-Z]", password):
-            valid = 0
+            valid = -1
         elif not re.search("[a-z]", password):
-            valid = 0
+            valid = -1
         elif not re.search("[$_@]", password):
-            valid = 0
-        elif re.search("\s", password):
-            valid = 0
-
+            valid = -2
         return valid
 
         # tekrari nabodane username ro bayad check kone () (DONE)
