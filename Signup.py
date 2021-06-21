@@ -13,23 +13,26 @@ class Signup:
         return base64_message
 
     def signup(self, username, password):
-        response = "hi from login, your username and password is:" + username + password
-
-
         salt = self.base64_encode(os.urandom(12)) #Generate 12 bytes salt
-        passwordWithSalt = password + salt
+        passwordWithSalt = salt + password
 
         m = hashlib.sha256()
         m.update(passwordWithSalt.encode())
         password_hash = m.hexdigest()
 
-        self.MysqlConnection.insert_into_table(username, password_hash, salt, 1, 1, 1, "NULL", 0)
+        status = self.MysqlConnection.insert_into_table(username, password_hash, salt, 1, 1, 1, "NULL", 0)
+
+        if status == 1:
+            response = "Singup Successfully"
+        if status == 0:
+            response = "This username exists. Please select another username."
+
 
         return response
 
 
-        # tekrari nabodane username ro bayad check kone ()
-            # age tekrari bod etela bede ()
+        # tekrari nabodane username ro bayad check kone () (DONE)
+            # age tekrari bod etela bede () (DONE)
         # zaeif bodane passwordo bayad check kone ()
             # age zaeif bod etela bede ke zaeife ()
             # age zaeif nabod bege sabt shodi ()
