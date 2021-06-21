@@ -15,26 +15,21 @@ class MysqlConnection:
 		#self.cursor.execute('INSERT INTO conf(ID, conf_name) VALUES(8 , \'classified\');')
 		#self.cnx.commit()
 
-
-	def insert_into_table(self, username, password_hash, salt, confidentiality_level, integrity_level, number_of_attempts, block_time, is_block):
-
+	def check_username(self, username):
 		self.cursor.execute(
 			"SELECT * FROM users WHERE username = %s",
 			(username,)
 		)
-        # Add THIS LINE
 		results = self.cursor.fetchall()
-        # gets the number of rows affected by the command executed
 		row_count = self.cursor.rowcount
 		if row_count == 0:
-			self.cursor.execute('INSERT INTO users(username, password_hash, salt, confidentiality_level, integrity_level, number_of_attempts, block_time, is_block) VALUES(\'%s\',\'%s\',\'%s\',1,1,0,NULL,0);' %(username, password_hash, salt))
-			self.cnx.commit()
 			return 1
 		else:
 			return 0
 
-
-
+	def insert_into_table(self, username, password_hash, salt, confidentiality_level, integrity_level, number_of_attempts, block_time, is_block):
+		self.cursor.execute('INSERT INTO users(username, password_hash, salt, confidentiality_level, integrity_level, number_of_attempts, block_time, is_block) VALUES(\'%s\',\'%s\',\'%s\',1,1,0,NULL,0);' %(username, password_hash, salt))
+		self.cnx.commit()
 
 	def close_connection(self):
 		self.cursor.close()

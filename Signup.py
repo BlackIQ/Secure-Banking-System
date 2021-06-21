@@ -2,6 +2,7 @@ import base64
 import os
 import hashlib
 from MysqlConnection import MysqlConnection
+import re
 
 class Signup:
     def __init__(self, MysqlConnection):
@@ -13,29 +14,53 @@ class Signup:
         return base64_message
 
     def signup(self, username, password):
-        salt = self.base64_encode(os.urandom(12)) #Generate 12 bytes salt
-        passwordWithSalt = salt + password
+        valid_username = self.MysqlConnection.check_username(username)
+        valid_password = self.check_password(password)
 
-        m = hashlib.sha256()
-        m.update(passwordWithSalt.encode())
-        password_hash = m.hexdigest()
-
-        status = self.MysqlConnection.insert_into_table(username, password_hash, salt, 1, 1, 1, "NULL", 0)
-
-        if status == 1:
-            response = "Singup Successfully"
-        if status == 0:
+        if valid_username == 0:
             response = "This username exists. Please select another username."
+        elif valid_password == 0:
+            response = "Your password is weak. Please select another password."
+        elif valid_password == -1:
+            response = "Your password is too short. Please select another password."
+        else:
+            salt = self.base64_encode(os.urandom(12)) #Generate 12 bytes salt
+            passwordWithSalt = salt + password
 
+            m = hashlib.sha256()
+            m.update(passwordWithSalt.encode())
+            password_hash = m.hexdigest()
+
+            self.MysqlConnection.insert_into_table(username, password_hash, salt, 1, 1, 1, "NULL", 0)
+
+            response = "Singup Successfully"
 
         return response
 
+    def check_password(self, password):
+        valid = 1
+
+        if len(password) < 8:
+            valid = -1
+        elif not re.search("[0-9]", password):
+            valid = 0
+        elif not re.search("[A-Z]", password):
+            valid = 0
+        elif not re.search("[a-z]", password):
+            valid = 0
+        elif not re.search("[$_@]", password):
+            valid = 0
+        elif re.search("\s", password):
+            valid = 0
+
+        return valid
 
         # tekrari nabodane username ro bayad check kone () (DONE)
             # age tekrari bod etela bede () (DONE)
-        # zaeif bodane passwordo bayad check kone ()
-            # age zaeif bod etela bede ke zaeife ()
-            # age zaeif nabod bege sabt shodi ()
+        # zaeif bodane passwordo bayad check kone (DONE)
+            # age zaeif bod etela bede ke zaeife () (DONE)
+                # check beshe age username tooye password bod etela bede
+            # age zaeif nabod bege sabt shodi () (DONE)
                 # to in halat bayad salt ro tolid kone. (DONE)
                 # bayad password ro ba salt jam kone va hash begire (DONE)
                 # bayad insert kone to database (DONE)
