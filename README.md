@@ -16,6 +16,9 @@ Then:
 1. ``Python3 Server.py``
 2. ``Python3 Client.py``
 
+## [Signup:](https://github.com/arman324/Secure-Banking-System/blob/main/Signup.py)
+* The signup class can check the strength of the input password.
+
 ## Support
 Reach out to us at:
 * riasiarman@yahoo.com
