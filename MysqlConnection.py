@@ -12,8 +12,6 @@ class MysqlConnection:
 		                              host='127.0.0.1',
 		                              database='secure_banking_system')
 		self.cursor = self.cnx.cursor()
-		#self.cursor.execute('INSERT INTO conf(ID, conf_name) VALUES(8 , \'classified\');')
-		#self.cnx.commit()
 
 	def check_username(self, username):
 		self.cursor.execute(
