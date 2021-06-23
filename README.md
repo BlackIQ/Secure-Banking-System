@@ -1,4 +1,10 @@
 # Secure-Banking-System :)
+## Overview
+### Common security mechanisms that have been implemented in this project are:
+1. Cryptography 
+2. Access Control
+3. Authentication
+4. Audit
 
 ## Requirements
 * [MySQL](https://www.mysql.com) -> ``sudo apt-get install mysql-server``
