@@ -29,6 +29,14 @@ class MysqlConnection:
 		self.cursor.execute('INSERT INTO users(username, password_hash, salt, confidentiality_level, integrity_level, number_of_attempts, block_time, is_block) VALUES(\'%s\',\'%s\',\'%s\',1,1,0,NULL,0);' %(username, password_hash, salt))
 		self.cnx.commit()
 
+	def fetch_hash_and_salt(self, username, password):
+		self.cursor.execute(
+			"select password_hash, salt from users where username = %s",
+			(username,)
+		)
+		results = self.cursor.fetchall()
+		return results
+		
 	def close_connection(self):
 		self.cursor.close()
 		self.cnx.close()
