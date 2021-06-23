@@ -1,4 +1,5 @@
 import socket
+import time
 
 class Client:
 	def __init__(self):
@@ -38,5 +39,11 @@ class Client:
 			self.Exit = 1
 		else:
 			print(message)
+			if "1" in message:
+				time.sleep(60) # delays for 1 minute
+			elif "2" in message:
+				time.sleep(120) # delays for 2 minutes
+			elif "4" in message:
+				time.sleep(240) # delays for 4 minutes
 
 client = Client()

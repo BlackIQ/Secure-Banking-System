@@ -26,16 +26,19 @@ class Login:
                 if block_informaiton == 0: #Account is not block. Attempt number < 3
                     response = "The input password is incorrect."
                     self.MysqlConnection.increase_number_of_attempts_and_is_block(username)
+
                 elif block_informaiton == 1: #Account is block for 1 minute. Attempt number = 3
                      self.MysqlConnection.increase_number_of_attempts_and_is_block(username)
                      response = "The input password is incorrect. Your account is block for 1 minute."
-                     #mishe bad az neshon dadane payam, sleep gozasht ta natone dade ii vared kone
+
                 elif block_informaiton == 2: #Account is block for 2 minutes. Attempt number = 4
                      self.MysqlConnection.increase_number_of_attempts_and_is_block(username)
                      response = "The input password is incorrect. Your account is block for 2 minutes."
+
                 elif block_informaiton == 3: #Account is block for 4 minutes. Attempt number = 5
                      self.MysqlConnection.increase_number_of_attempts_and_is_block(username)
                      response = "The input password is incorrect. Your account is block for 4 minutes."
+
                 else: #Account is block. Attempt number >= 6 => Honeypot
                     response = "You are in the honeypot :)"
                     # honeypot()
@@ -94,5 +97,5 @@ class Login:
                     # state system ro avaz kone
                     # bayad yekbar database disconnect beshe va dobare connect beshe (DONE)
                 # agar ghalat bod error bede (DONE)
-            # piade sazi mechanisme backoff
+            # piade sazi mechanisme backoff (DONE)
             # piade sazi honeypot
