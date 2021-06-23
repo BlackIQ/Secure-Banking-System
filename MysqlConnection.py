@@ -64,6 +64,15 @@ class MysqlConnection:
 			self.cursor.execute('update users set  number_of_attempts = number_of_attempts +1 where username= \'%s\';' %(username, ))
 			self.cnx.commit()
 
+	def reset_number_of_attempts_and_is_block(self, username):
+
+		self.cursor.execute('update users set number_of_attempts = 0 where username= \'%s\';' %(username, ))
+		self.cnx.commit()
+
+		self.cursor.execute('update users set is_block = 0 where username= \'%s\';' %(username, ))
+		self.cnx.commit()
+
+
 	def close_connection(self):
 		self.cursor.close()
 		self.cnx.close()

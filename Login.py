@@ -12,33 +12,33 @@ class Login:
         self.MysqlConnection.mysql_connection()
         valid_username = self.MysqlConnection.check_username(username)
         block_informaiton = self.backoff_mechanism(username)
+        correct_password = self.check_the_input_password(password, username)
 
         if valid_username == 1:
             response = "This username does not exist. If you have not an account, you need to signup."
         else:
-            if block_informaiton == 0: #Account is not block. Attempt number < 3
-                correct_password = self.check_the_input_password(password, username)
-                if correct_password == 0:
+            if correct_password == 1: # password is currect
+                response = "You have successfully Logged in. You can use help command for more information."
+                self.MysqlConnection.reset_number_of_attempts_and_is_block(username)
+                #go to next state
+
+            elif correct_password == 0: # password is not currect
+                if block_informaiton == 0: #Account is not block. Attempt number < 3
                     response = "The input password is incorrect."
                     self.MysqlConnection.increase_number_of_attempts_and_is_block(username)
-                else:
-                    response = "You have successfully Logged in. You can use help command for more information."
-                    #change is_block and number of attack to zero directly in the database
-                    #go to next state
-
-            elif block_informaiton == 1: #Account is block for 1 minute. Attempt number = 3
-                 self.MysqlConnection.increase_number_of_attempts_and_is_block(username)
-                 response = "Your account is block for 1 minute."
-                 #mishe bad az neshon dadane payam, sleep gozasht ta natone dade ii vared kone
-            elif block_informaiton == 2: #Account is block for 2 minutes. Attempt number = 4
-                 self.MysqlConnection.increase_number_of_attempts_and_is_block(username)
-                 response = "Your account is block for 2 minute"
-            elif block_informaiton == 3: #Account is block for 4 minutes. Attempt number = 5
-                 self.MysqlConnection.increase_number_of_attempts_and_is_block(username)
-                 response = "Your account is block for 4 minute"
-            else: #Account is block. Attempt number >= 6 => Honeypot
-                response = "You are in the honeypot :)"
-                # honeypot()
+                elif block_informaiton == 1: #Account is block for 1 minute. Attempt number = 3
+                     self.MysqlConnection.increase_number_of_attempts_and_is_block(username)
+                     response = "The input password is incorrect. Your account is block for 1 minute."
+                     #mishe bad az neshon dadane payam, sleep gozasht ta natone dade ii vared kone
+                elif block_informaiton == 2: #Account is block for 2 minutes. Attempt number = 4
+                     self.MysqlConnection.increase_number_of_attempts_and_is_block(username)
+                     response = "The input password is incorrect. Your account is block for 2 minutes."
+                elif block_informaiton == 3: #Account is block for 4 minutes. Attempt number = 5
+                     self.MysqlConnection.increase_number_of_attempts_and_is_block(username)
+                     response = "The input password is incorrect. Your account is block for 4 minutes."
+                else: #Account is block. Attempt number >= 6 => Honeypot
+                    response = "You are in the honeypot :)"
+                    # honeypot()
 
         self.MysqlConnection.close_connection()
         return response
