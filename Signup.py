@@ -14,6 +14,7 @@ class Signup:
         return base64_message
 
     def signup(self, username, password):
+        self.MysqlConnection.mysql_connection()
         valid_username = self.MysqlConnection.check_username(username)
         valid_password = self.check_password(password, username)
 
@@ -39,6 +40,8 @@ class Signup:
 
             response = "You have successfully Signed up. Now you can Login."
 
+
+        self.MysqlConnection.close_connection()
         return response
 
     def check_password(self, password, username):

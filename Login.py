@@ -9,6 +9,7 @@ class Login:
         self.MysqlConnection = MysqlConnection
 
     def login(self, username, password):
+        self.MysqlConnection.mysql_connection()
         valid_username = self.MysqlConnection.check_username(username)
 
         if valid_username == 1:
@@ -21,6 +22,8 @@ class Login:
             else:
                 response = "You have successfully Logged in. You can use help command for more information."
 
+
+        self.MysqlConnection.close_connection()
         return response
 
     def check_the_input_password(self, password, username):
@@ -45,9 +48,10 @@ class Login:
 
         # bar asase username vorodi, az database salt va hash ro select koni (DONE)
             # agar username vojod nadasht error bede (DONE)
-            # salt ro + password vorodi koni hash begiri va compare koni
-                # agar dorost bod bege ok
+            # salt ro + password vorodi koni hash begiri va compare koni (DONE)
+                # agar dorost bod bege ok (DONE)
                     # state system ro avaz kone
-                # agar ghalat bod error bede
+                    # bayad yekbar database disconnect beshe va dobare connect beshe (DONE)
+                # agar ghalat bod error bede (DONE)
             # piade sazi mechanisme backoff
             # piade sazi honeypot

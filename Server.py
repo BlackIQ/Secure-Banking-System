@@ -36,7 +36,6 @@ class Server:
 			msg = self.c1.recv(4096).decode()
 			self.receive_message(msg)
 
-		self.MysqlConnection.close_connection()
 		self.s.close()
 
 	def send_message(self,message):

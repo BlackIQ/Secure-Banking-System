@@ -36,7 +36,7 @@ class MysqlConnection:
 		)
 		results = self.cursor.fetchall()
 		return results
-		
+
 	def close_connection(self):
 		self.cursor.close()
 		self.cnx.close()
