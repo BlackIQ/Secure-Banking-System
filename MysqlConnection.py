@@ -45,6 +45,25 @@ class MysqlConnection:
 		results = self.cursor.fetchall()
 		return results
 
+	def increase_number_of_attempts_and_is_block(self, username):
+		self.cursor.execute(
+			"select number_of_attempts, is_block from users where username = %s",
+			(username,)
+		)
+		results = self.cursor.fetchall()
+
+		for i in results:
+			result = i
+
+		number_of_attempts , is_block = result
+
+		if number_of_attempts == 2:
+			self.cursor.execute('update users set  number_of_attempts = number_of_attempts +1, is_block = is_block +1 where username= \'%s\';' %(username, ))
+			self.cnx.commit()
+		else:
+			self.cursor.execute('update users set  number_of_attempts = number_of_attempts +1 where username= \'%s\';' %(username, ))
+			self.cnx.commit()
+
 	def close_connection(self):
 		self.cursor.close()
 		self.cnx.close()

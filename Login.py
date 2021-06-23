@@ -20,19 +20,21 @@ class Login:
                 correct_password = self.check_the_input_password(password, username)
                 if correct_password == 0:
                     response = "The input password is incorrect."
-                    #number of attempts should increase here in the database, check if it is == 3, is block set 1
-                    #update users set is_block = 1 where username = "Kimia";
+                    self.MysqlConnection.increase_number_of_attempts_and_is_block(username)
                 else:
                     response = "You have successfully Logged in. You can use help command for more information."
                     #change is_block and number of attack to zero directly in the database
                     #go to next state
 
             elif block_informaiton == 1: #Account is block for 1 minute. Attempt number = 3
+                 self.MysqlConnection.increase_number_of_attempts_and_is_block(username)
                  response = "Your account is block for 1 minute."
                  #mishe bad az neshon dadane payam, sleep gozasht ta natone dade ii vared kone
             elif block_informaiton == 2: #Account is block for 2 minutes. Attempt number = 4
+                 self.MysqlConnection.increase_number_of_attempts_and_is_block(username)
                  response = "Your account is block for 2 minute"
             elif block_informaiton == 3: #Account is block for 4 minutes. Attempt number = 5
+                 self.MysqlConnection.increase_number_of_attempts_and_is_block(username)
                  response = "Your account is block for 4 minute"
             else: #Account is block. Attempt number >= 6 => Honeypot
                 response = "You are in the honeypot :)"
