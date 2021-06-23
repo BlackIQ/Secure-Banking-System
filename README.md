@@ -24,8 +24,8 @@ Then:
 
 ## [Signup:](https://github.com/arman324/Secure-Banking-System/blob/main/Signup.py)
 ### Signup class features:
-* Check the strength of the input password -> ```for Authentication```
-* Salt and hash the input password. -> ```for Authentication```
+* Checking the strength of the input password for ```Authentication```
+* Adding Salt and hash the input password for ```Authentication```
 
 ## Support
 Reach out to us at:
