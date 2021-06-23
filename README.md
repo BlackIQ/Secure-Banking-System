@@ -27,6 +27,10 @@ Then:
 * Checking the strength of the input password for ```Authentication```
 * Adding Salt and hash the input password for ```Authentication```
 
+## [Login:](https://github.com/arman324/Secure-Banking-System/blob/main/Login.py)
+### Login class features:
+* Backoff mechanism for ```Authentication```
+
 ## Support
 Reach out to us at:
 * riasiarman@yahoo.com
