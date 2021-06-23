@@ -11,23 +11,38 @@ class Login:
     def login(self, username, password):
         self.MysqlConnection.mysql_connection()
         valid_username = self.MysqlConnection.check_username(username)
+        block_informaiton = self.backoff_mechanism(username)
 
         if valid_username == 1:
-            response = "This username does not exist."
+            response = "This username does not exist. If you have not an account, you need to signup."
         else:
-            correct_password = self.check_the_input_password(password, username)
-            if correct_password == 0:
-                response = "The input password is incorrect."
-                #backoff should increase here
-            else:
-                response = "You have successfully Logged in. You can use help command for more information."
+            if block_informaiton == 0: #Account is not block. Attempt number < 3
+                correct_password = self.check_the_input_password(password, username)
+                if correct_password == 0:
+                    response = "The input password is incorrect."
+                    #number of attempts should increase here in the database, check if it is == 3, is block set 1
+                    #update users set is_block = 1 where username = "Kimia";
+                else:
+                    response = "You have successfully Logged in. You can use help command for more information."
+                    #change is_block and number of attack to zero directly in the database
+                    #go to next state
 
+            elif block_informaiton == 1: #Account is block for 1 minute. Attempt number = 3
+                 response = "Your account is block for 1 minute."
+                 #mishe bad az neshon dadane payam, sleep gozasht ta natone dade ii vared kone
+            elif block_informaiton == 2: #Account is block for 2 minutes. Attempt number = 4
+                 response = "Your account is block for 2 minute"
+            elif block_informaiton == 3: #Account is block for 4 minutes. Attempt number = 5
+                 response = "Your account is block for 4 minute"
+            else: #Account is block. Attempt number >= 6 => Honeypot
+                response = "You are in the honeypot :)"
+                # honeypot()
 
         self.MysqlConnection.close_connection()
         return response
 
     def check_the_input_password(self, password, username):
-        hash_and_salt = self.MysqlConnection.fetch_hash_and_salt(username, password)
+        hash_and_salt = self.MysqlConnection.fetch_hash_and_salt(username)
 
         for i in hash_and_salt:
             result = i
@@ -45,6 +60,30 @@ class Login:
             correct_password = 0
 
         return correct_password
+
+    def backoff_mechanism(self, username):
+        block_informaiton = self.MysqlConnection.fetch_block_information(username)
+
+        for i in block_informaiton:
+            result = i
+
+        number_of_attempts , is_block = result
+
+        block_info = 0
+
+        if is_block == 0 and number_of_attempts < 3:
+            block_info = 0
+        elif number_of_attempts == 3 and is_block == 1:
+            block_info = 1
+        elif number_of_attempts == 4 and is_block == 1:
+            block_info = 2
+        elif number_of_attempts == 5 and is_block == 1:
+            block_info = 3
+        elif number_of_attempts >= 6 and is_block == 1:
+            block_info = 4
+
+        return block_info
+
 
         # bar asase username vorodi, az database salt va hash ro select koni (DONE)
             # agar username vojod nadasht error bede (DONE)
