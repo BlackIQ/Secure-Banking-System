@@ -37,7 +37,7 @@ class Signup:
 
             self.MysqlConnection.insert_into_table(username, password_hash, salt, 1, 1, 1, "NULL", 0)
 
-            response = "Singup Successfully. Now you can Login."
+            response = "You have successfully Signed up. Now you can Login."
 
         return response
 

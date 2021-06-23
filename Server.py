@@ -72,4 +72,4 @@ class Server:
 			self.send_message("Please use help command")
 
 
-server = Server(Login(),Signup(MysqlConnection()),MysqlConnection())
+server = Server(Login(MysqlConnection()),Signup(MysqlConnection()),MysqlConnection())
