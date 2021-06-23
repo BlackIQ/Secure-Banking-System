@@ -17,7 +17,9 @@ Then:
 2. ``Python3 Client.py``
 
 ## [Signup:](https://github.com/arman324/Secure-Banking-System/blob/main/Signup.py)
-* The signup class can check the strength of the input password.
+### Signup class features:
+* Check the strength of the input password -> ```for Authentication```
+* Salt and hash the input password. -> ```for Authentication```
 
 ## Support
 Reach out to us at:
