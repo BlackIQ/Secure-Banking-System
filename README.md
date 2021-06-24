@@ -35,5 +35,5 @@ Then:
 ## Support
 Reach out to us at:
 * riasiarman@yahoo.com
-* [@ellietoulabi](https://github.com/ellietoulabi)
+* elitoulabin@gmail.com
 * ghazalze@yahoo.com
