@@ -25,8 +25,8 @@ class MysqlConnection:
 		else:
 			return 0
 
-	def insert_into_table(self, username, password_hash, salt, confidentiality_level, integrity_level, number_of_attempts, block_time, is_block):
-		self.cursor.execute('INSERT INTO users(username, password_hash, salt, confidentiality_level, integrity_level, number_of_attempts, block_time, is_block) VALUES(\'%s\',\'%s\',\'%s\',1,1,0,NULL,0);' %(username, password_hash, salt))
+	def insert_into_table(self, username, password_hash, salt, confidentiality_level, integrity_level, number_of_attempts, is_block):
+		self.cursor.execute('INSERT INTO users(username, password_hash, salt, confidentiality_level, integrity_level, number_of_attempts, is_block) VALUES(\'%s\',\'%s\',\'%s\',1,1,0,0);' %(username, password_hash, salt))
 		self.cnx.commit()
 
 	def fetch_hash_and_salt(self, username):

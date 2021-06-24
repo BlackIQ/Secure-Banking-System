@@ -11,12 +11,12 @@ class Login:
     def login(self, username, password):
         self.MysqlConnection.mysql_connection()
         valid_username = self.MysqlConnection.check_username(username)
-        block_informaiton = self.backoff_mechanism(username)
-        correct_password = self.check_the_input_password(password, username)
 
         if valid_username == 1:
-            response = "This username does not exist. If you have not an account, you need to signup."
+            response = "This username does not exist. If you don't have an account, you need to signup."
         else:
+            block_informaiton = self.backoff_mechanism(username)
+            correct_password = self.check_the_input_password(password, username)
             if correct_password == 1: # password is currect
                 response = "You have successfully Logged in. You can use help command for more information."
                 self.MysqlConnection.reset_number_of_attempts_and_is_block(username)

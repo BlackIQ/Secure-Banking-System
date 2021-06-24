@@ -16,7 +16,6 @@ CREATE TABLE users(
     confidentiality_level int,
     integrity_level int,
     number_of_attempts int,
-    block_time DATETIME,
     is_block int default 0,
     foreign key (confidentiality_level) references confidentiality(ID),
 	  foreign key (integrity_level) references integrity(ID)

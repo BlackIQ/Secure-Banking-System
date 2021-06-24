@@ -36,7 +36,7 @@ class Signup:
             m.update(passwordWithSalt.encode())
             password_hash = m.hexdigest()
 
-            self.MysqlConnection.insert_into_table(username, password_hash, salt, 1, 1, 1, "NULL", 0)
+            self.MysqlConnection.insert_into_table(username, password_hash, salt, 1, 1, 1, 0)
 
             response = "You have successfully Signed up. Now you can Login."
 
