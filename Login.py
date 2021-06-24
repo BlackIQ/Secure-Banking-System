@@ -88,14 +88,3 @@ class Login:
             block_info = 4
 
         return block_info
-
-
-        # bar asase username vorodi, az database salt va hash ro select koni (DONE)
-            # agar username vojod nadasht error bede (DONE)
-            # salt ro + password vorodi koni hash begiri va compare koni (DONE)
-                # agar dorost bod bege ok (DONE)
-                    # state system ro avaz kone
-                    # bayad yekbar database disconnect beshe va dobare connect beshe (DONE)
-                # agar ghalat bod error bede (DONE)
-            # piade sazi mechanisme backoff (DONE)
-            # piade sazi honeypot
