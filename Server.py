@@ -62,6 +62,12 @@ class Server:
 			if len(Parts) == 3:
 				response = self.Login.login(Parts[1], Parts[2])
 				self.send_message(response)
+				if "1" in response:
+					time.sleep(60) # delays for 1 minute
+				elif "2" in response:
+					time.sleep(120) # delays for 2 minutes
+				elif "4" in response:
+					time.sleep(240) # delays for 4 minutes
 			else:
 				self.send_message("Incorrect arguments. Please use help command")
 
