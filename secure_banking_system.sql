@@ -65,6 +65,7 @@ CREATE TABLE account_user(
     user_id INT,
     confidentiality_level INT default 4,
     integrity_level INT default 1,
+    accept_status bit default 0,
     foreign key (user_id) references users(ID),
     foreign key (account_no) references accounts(account_no),
     foreign key (confidentiality_level) references confidentiality(ID),

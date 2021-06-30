@@ -11,7 +11,7 @@ class MysqlConnection:
 		self.cnx = mysql.connector.connect(user='root', password='10101010',
 		                              host='127.0.0.1',
 		                              database='secure_banking_system')
-		self.cursor = self.cnx.cursor()
+		self.cursor = self.cnx.cursor(buffered=True)
 
 	def check_username(self, username):
 		self.cursor.execute(
@@ -76,3 +76,14 @@ class MysqlConnection:
 	def close_connection(self):
 		self.cursor.close()
 		self.cnx.close()
+  
+	def create_new_account(self,username,account_type,amount,conf_label,integrity_label):
+		self.cursor.execute("select ID from users where username = %s",(username,))
+		ids = self.cursor.fetchone()
+		user_id = ids[0]
+		self.cursor.execute('INSERT INTO accounts(owner_id, account_type_id, amount, confidentiality_level, integrity_level) VALUES(\'%s\',\'%s\',\'%s\',\'%s\',\'%s\');' %(user_id, account_type, amount, conf_label, integrity_label,))
+		self.cnx.commit()
+		self.cursor.execute("select account_no from accounts where owner_id = %s and account_type_id = %s and amount = %s and confidentiality_level = %s and integrity_level = %s",(user_id, account_type, amount, conf_label, integrity_label,))
+		nos = self.cursor.fetchone()
+		account_no=nos[0]
+		return account_no

@@ -2,17 +2,20 @@ import socket
 from Login import Login
 from Signup import Signup
 from MysqlConnection import MysqlConnection
+from BankingOperation import BankingOperation
 import time
 
 class Server:
-	def __init__(self, Login, Signup, MysqlConnection):
+	def __init__(self, Login, Signup, MysqlConnection, BankingOperation):
 		self.Exit = 0
 		self.state = 0
 		self.Login = Login
 		self.Signup = Signup
 		self.MysqlConnection = MysqlConnection
+		self.BankingOperation = BankingOperation
 		self.start_server()
 		self.c1
+		self.username=''
 
 	def start_server(self):
 		self.s = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
@@ -68,6 +71,8 @@ class Server:
 				self.send_message(response)
 				if "Logged in" in response:
 					self.state = 1
+					self.username = Parts[1]
+					# self.password = Parts[2]
 				if "1" in response:
 					time.sleep(60) # delays for 1 minute
 				elif "2" in response:
@@ -89,7 +94,10 @@ class Server:
 		Parts = inputCommand.split()
 
 		if Parts[0] == "Help" or Parts[0] == "help":
-			self.send_message("""\nCreate [account_type] [amount] [conf_label] [integrity_label]
+			self.send_message("""\nCreate [account_type] [amount] [conf_label] [integrity_label]\n\t 
+[account_type] : \n\t\t1:Short-term deposit\n\t\t2:Long-term deposit\n\t\t3:Current\n\t\t4:Interest-free\n\t
+[conf_label] : \n\t\t1:Unclassified\n\t\t2:Confidential\n\t\t3:Secret\n\t\t4:Top Secret\n\t
+[integrity_label] : \n\t\t1:UnTrusted\n\t\t2:SlightlyTrusted\n\t\t3:Trusted\n\t\t4:VeryTrusted\n
 Join [account_no]
 Accept [username] [conf_label] [integrity_label]
 Show_MyAccount
@@ -100,8 +108,7 @@ Exit\n""")
 
 		elif Parts[0] == "Create" or Parts[0] == "create":
 			if len(Parts) == 5:
-				#response = self.Banking_Operation.create(Parts[1], Parts[2], Parts[3], Parts[4])
-				response = "hi from create"
+				response = self.BankingOperation.create_account(self.username, Parts[1], Parts[2], Parts[3], Parts[4])
 				self.send_message(response)
 			else:
 				self.send_message("Incorrect arguments. Please use help command")
@@ -161,4 +168,4 @@ Exit\n""")
 			self.send_message("Please use help command")
 
 
-server = Server(Login(MysqlConnection()),Signup(MysqlConnection()),MysqlConnection())
+server = Server(Login(MysqlConnection()),Signup(MysqlConnection()),MysqlConnection(),BankingOperation(MysqlConnection()))
