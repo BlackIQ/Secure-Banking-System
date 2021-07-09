@@ -53,6 +53,7 @@ CREATE TABLE accounts(
     confidentiality_level INT default 4, 
     integrity_level INT default 1,       
     amount FLOAT,
+    DateCreated DATETIME NOT NULL DEFAULT now(),
     foreign key (owner_id) references users(ID),
     foreign key (account_type_id) references account_type(ID),
     foreign key (confidentiality_level) references confidentiality(ID),
@@ -72,5 +73,28 @@ CREATE TABLE account_user(
     foreign key (integrity_level) references integrity(ID)
 
 );
+
+CREATE TABLE deposit(
+    ID int auto_increment primary key,
+    from_account bigint unsigned ,
+    to_account bigint unsigned ,
+    amount FLOAT,
+    transaction_date DATETIME NOT NULL DEFAULT now(),
+    foreign key (from_account) references accounts(account_no),
+    foreign key (to_account) references accounts(account_no)
+
+);
+CREATE TABLE withdraw(
+    ID int auto_increment primary key,
+    from_account bigint unsigned,
+    to_account bigint unsigned ,
+    amount FLOAT,
+    transaction_date DATETIME NOT NULL DEFAULT now(),
+    foreign key (from_account) references accounts(account_no),
+    foreign key (to_account) references accounts(account_no)
+
+);
+
+
 
 
