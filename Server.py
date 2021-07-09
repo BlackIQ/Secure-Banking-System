@@ -115,24 +115,21 @@ Exit\n""")
 
 		elif Parts[0] == "Join" or Parts[0] == "join":
 			if len(Parts) == 2:
-				#response = self.Banking_Operation.join(Parts[1])
-				response = "hi from join"
+				response = self.BankingOperation.join(self.username, Parts[1])
 				self.send_message(response)
 			else:
 				self.send_message("Incorrect arguments. Please use help command")
 
 		elif Parts[0] == "Accept" or Parts[0] == "accept":
 			if len(Parts) == 4:
-				#response = self.Banking_Operation.accept(Parts[1], Parts[2], Parts[3])
-				response = "hi from accept"
+				response = self.BankingOperation.accept(self.username, Parts[1], Parts[2], Parts[3])
 				self.send_message(response)
 			else:
 				self.send_message("Incorrect arguments. Please use help command")
 
 		elif Parts[0] == "Show_MyAccount" or Parts[0] == "show_MyAccount":
 			if len(Parts) == 1:
-				#response = self.Banking_Operation.show_MyAccount()
-				response = "hi from Show_MyAccount"
+				response = self.BankingOperation.show_MyAccount(self.username)
 				self.send_message(response)
 			else:
 				self.send_message("Incorrect arguments. Please use help command")

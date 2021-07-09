@@ -87,3 +87,53 @@ class MysqlConnection:
 		nos = self.cursor.fetchone()
 		account_no=nos[0]
 		return account_no
+
+	def add_join_request(self,username, account_no):
+		self.cursor.execute("select ID from users where username = %s",(username,))
+		ids = self.cursor.fetchone()
+		user_id = ids[0]
+		self.cursor.execute('select accept_status from account_user where account_no = %s and user_id = %s',(account_no,user_id))
+		prev = self.cursor.fetchall()
+		response=''
+		if len(prev)!=0:
+			if prev[0]==1:
+				response = f"You Have Already Joint This Account."
+			else:
+				response = f"You Have Already Requested to Join This Account."
+
+		else :
+			self.cursor.execute('Insert into account_user(account_no, user_id) VALUES (\'%s\',\'%s\');' %(account_no,user_id,))
+			self.cnx.commit()
+			response = f"Join Request Sent to Account Owner."
+
+		return response
+
+	def accept_join_request(self, owner, username, conf_label, integrity_label):
+		self.cursor.execute("select ID from users where username = %s",(owner,))
+		oids = self.cursor.fetchone()
+		owner_id = oids[0]
+		self.cursor.execute("select ID from users where username = %s",(username,))
+		uids = self.cursor.fetchone()
+		user_id = uids[0]
+		self.cursor.execute("select account_no from accounts where owner_id = %s",(owner_id,))
+		nos = self.cursor.fetchone()
+		account_no = nos[0]
+		self.cursor.execute('update account_user set accept_status = 1, confidentiality_level = %s, integrity_level = %s where  account_no = %s and user_id = %s',(conf_label,integrity_label, account_no,user_id))
+		self.cnx.commit()
+		response = f"User \033[1m{username}\033[0m Joint to Account \033[1m{account_no}\033[0m. "
+		return response
+
+
+		
+	def show_list_of_account(self, username):
+		self.cursor.execute("select ID from users where username = %s",(username,))
+		uids = self.cursor.fetchone()
+		user_id = uids[0]
+		self.cursor.execute("select account_no from accounts where owner_id = %s",(user_id,))
+		nos = self.cursor.fetchone()
+		account_no = nos[0]
+		self.cursor.execute("select account_no from account_user where user_id = %s and accept_status = 1",(user_id,))
+		joints = self.cursor.fetchall()
+		return account_no, joints
+
+    
