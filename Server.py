@@ -102,7 +102,7 @@ Join [account_no]
 Accept [username] [conf_label] [integrity_label]
 Show_MyAccount
 Show_Account [account_no]
-Deposit [from_account_no] [to_account_no] [amount]
+Deposit  [to_account_no] [amount]
 Withdraw [from_account_no] [to_account_no] [amount]
 Exit\n""")
 
@@ -142,9 +142,8 @@ Exit\n""")
 				self.send_message("Incorrect arguments. Please use help command")
 
 		elif Parts[0] == "Deposit" or Parts[0] == "deposit":
-			if len(Parts) == 4:
-				#response = self.Banking_Operation.deposit(Parts[1], Parts[2], Parts[3])
-				response = "hi from deposit"
+			if len(Parts) == 3:
+				response = self.BankingOperation.deposit(self.username,Parts[1], Parts[2])
 				self.send_message(response)
 			else:
 				self.send_message("Incorrect arguments. Please use help command")

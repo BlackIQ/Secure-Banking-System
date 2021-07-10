@@ -164,6 +164,38 @@ class MysqlConnection:
 
 		return account_info,owners,last5_deposits,last5_withdraw
 
+	def deposit_to_account(self, owner, to_account, amount):
+		response=''
+		self.cursor.execute("select ID from users where username = %s",(owner,))
+		uids = self.cursor.fetchone()
+		user_id = uids[0]
+		self.cursor.execute("select account_no from accounts where owner_id = %s",(user_id,))
+		nos = self.cursor.fetchone()
+		account_no = nos[0]
+		self.cursor.execute("select amount from accounts where account_no = %s",(account_no,))
+		ams = self.cursor.fetchone()
+		cur_amount = ams[0]
+		if float(cur_amount) < float(amount):
+			response = 'Your account balance is not enough.'
+		else:
+			self.cursor.execute('update accounts set amount = %s where  account_no = %s ',(float(cur_amount)-float(amount),account_no))
+			self.cnx.commit()
+			self.cursor.execute("select amount from accounts where account_no = %s",(to_account,))
+			tms = self.cursor.fetchone()
+			to_cur_amount = tms[0]
+			self.cursor.execute('update accounts set amount = %s where  account_no = %s ',(float(to_cur_amount)+float(amount),to_account))
+			self.cnx.commit()
+			self.cursor.execute('Insert into transactions(to_account, from_account, amount) VALUES (\'%s\',\'%s\',\'%s\');' %(to_account,account_no,amount,))
+			self.cnx.commit()
+			response = f"Successful Transaction. Current Balance = {float(cur_amount)-float(amount)}"
+
+
+		return response
+ 
+    
+  
+
+
 
 
      

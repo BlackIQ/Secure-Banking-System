@@ -54,6 +54,13 @@ class BankingOperation:
         
         self.MysqlConnection.close_connection()
         return response
+    
+    def deposit(self,owner, to_account, amount):
+        self.MysqlConnection.mysql_connection()
+        response = self.MysqlConnection.deposit_to_account(owner,to_account,amount)
+        self.MysqlConnection.close_connection()
+        return response
+        
         
     
         
