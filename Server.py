@@ -136,8 +136,7 @@ Exit\n""")
 
 		elif Parts[0] == "show_Account" or Parts[0] == "show_Account":
 			if len(Parts) == 2:
-				#response = self.Banking_Operation.show_Account(Parts[1])
-				response = "hi from show_Account"
+				response = self.BankingOperation.show_Account(self.username, Parts[1])
 				self.send_message(response)
 			else:
 				self.send_message("Incorrect arguments. Please use help command")

@@ -35,4 +35,25 @@ class BankingOperation:
         self.MysqlConnection.close_connection()
         return response
     
+    def show_Account(self,username, account_no):
+        self.MysqlConnection.mysql_connection()
+        account_info,owners,last5_deposits,last5_withdraw = self.MysqlConnection.account_info(username,account_no)
+        response = f"\n\033[1m Creator:\033[0m {account_info[0]}\t\033[1m DateCreated:\033[0m {account_info[1]}\t\033[1m Amount:\033[0m {account_info[2]}\t\033[1m Type:\033[0m {account_info[3]}\n"
+        response = response + "\033[1m Owners:\033[0m\n"
+        for i in range(0,len(owners)):
+            response = response + f"\t{i+1}. {owners[i][0]}\n"
+        
+        response = response + "\033[1m 5 Most Recent Deposits:\033[0m\n"
+        for i in range(0,len(last5_deposits)):
+            response = response + f"\t{i+1}. To: {last5_deposits[i][2]}\tAmount: {last5_deposits[i][3]}\tDate: {last5_deposits[i][4]}\n"
+        
+        response = response + "\033[1m 5 Most Recent Withdraws:\033[0m\n"
+        for i in range(0,len(last5_withdraw)):
+            response = response + f"\t{i+1}. From: {last5_withdraw[i][1]}\tAmount: {last5_withdraw[i][3]}\tDate: {last5_withdraw[i][4]}\n"
+        
+        
+        self.MysqlConnection.close_connection()
+        return response
+        
+    
         

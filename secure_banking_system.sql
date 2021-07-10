@@ -74,17 +74,8 @@ CREATE TABLE account_user(
 
 );
 
-CREATE TABLE deposit(
-    ID int auto_increment primary key,
-    from_account bigint unsigned ,
-    to_account bigint unsigned ,
-    amount FLOAT,
-    transaction_date DATETIME NOT NULL DEFAULT now(),
-    foreign key (from_account) references accounts(account_no),
-    foreign key (to_account) references accounts(account_no)
 
-);
-CREATE TABLE withdraw(
+CREATE TABLE transactions(
     ID int auto_increment primary key,
     from_account bigint unsigned,
     to_account bigint unsigned ,

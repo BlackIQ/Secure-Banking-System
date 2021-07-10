@@ -136,4 +136,36 @@ class MysqlConnection:
 		joints = self.cursor.fetchall()
 		return account_no, joints
 
+	def account_info(self, username, account_no):
+		self.cursor.execute("select ID from users where username = %s",(username,))
+		uids = self.cursor.fetchone()
+		user_id = uids[0]
+		query1 = """select users.username,accounts.DateCreated,accounts.amount,account_type.title
+					from accounts inner join users on accounts.owner_id = users.ID 
+					inner join account_type on account_type.ID = accounts.account_type_id
+					where accounts.account_no = %s"""
+		self.cursor.execute(query1,(account_no,))
+		account_info = self.cursor.fetchone()
+		query2 = """select users.username
+					from account_user inner join users on account_user.user_id = users.ID 
+					where account_user.account_no = %s and account_user.accept_status = 1"""
+		self.cursor.execute(query2,(account_no,))
+		owners =  self.cursor.fetchall()
+		query3 = """select *
+					from transactions 
+					where from_account = %s order by transaction_date DESC limit 5"""
+		self.cursor.execute(query3,(account_no,))
+		last5_deposits = self.cursor.fetchall()
+		query4 = """select *
+					from transactions 
+					where to_account = %s order by transaction_date DESC limit 5"""
+		self.cursor.execute(query4,(account_no,))
+		last5_withdraw = self.cursor.fetchall()
+
+		return account_info,owners,last5_deposits,last5_withdraw
+
+
+
+     
+
     
