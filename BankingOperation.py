@@ -27,7 +27,7 @@ class BankingOperation:
     def show_MyAccount(self, username):
         self.MysqlConnection.mysql_connection()
         account_no, joints = self.MysqlConnection.show_list_of_account(username)
-        response = f"1. \033[1m{account_no}\03show3[0m\n"
+        response = f"1. \033[1m{account_no}\033[0m\n"
         js = ''
         for i in range(2,len(joints)+2):
             js = js + f"{i}. {joints[i-2][0]}\n"
@@ -60,6 +60,13 @@ class BankingOperation:
         response = self.MysqlConnection.deposit_to_account(owner,to_account,amount)
         self.MysqlConnection.close_connection()
         return response
+    
+    def withdraw (self, username, from_account, to_account, amount):
+        self.MysqlConnection.mysql_connection()
+        response = self.MysqlConnection.withdraw(username, from_account, to_account, amount)
+        self.MysqlConnection.close_connection()
+        return response
+        
         
         
     

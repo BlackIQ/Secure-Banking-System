@@ -150,8 +150,7 @@ Exit\n""")
 
 		elif Parts[0] == "Withdraw" or Parts[0] == "withdraw":
 			if len(Parts) == 4:
-				#response = self.Banking_Operation.withdraw(Parts[1], Parts[2], Parts[3])
-				response = "hi from withdraw"
+				response = self.BankingOperation.withdraw(self.username, Parts[1], Parts[2], Parts[3])
 				self.send_message(response)
 			else:
 				self.send_message("Incorrect arguments. Please use help command")
