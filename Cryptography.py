@@ -18,7 +18,7 @@ class Encryption_Decryption:
     def decryption_server_private_key(cipher_text):
         pr_key = RSA.import_key(open('keys/server_private.pem', 'r').read())
         decrypt = PKCS1_OAEP.new(key=pr_key)
-        decrypted_message = decrypt.decrypt( cipher_text)
+        decrypted_message = decrypt.decrypt(cipher_text)
         return decrypted_message
 
     @staticmethod
@@ -53,10 +53,8 @@ class Sign_Verify:
         verification = 0
         try:
             verifier.verify(digest_message, signed_message)
-            print("Signature is valid.")
             verification = 1
         except:
-            print("Signature is invalid.")
             verification = 0
         return verification
 
@@ -78,9 +76,20 @@ class Sign_Verify:
         verification = 0
         try:
             verifier.verify(digest_message, signed_message)
-            print("Signature is valid.")
             verification = 1
         except:
-            print("Signature is invalid.")
             verification = 0
         return verification
+
+
+class Private_Keys:
+    @staticmethod
+    def client_private_key():
+        pr_key = RSA.import_key(open('keys/client_private.pem', 'r').read())
+        return pr_key
+
+    @staticmethod
+    def server_private_key():
+        pr_key = RSA.import_key(open('keys/server_private.pem', 'r').read())
+        return pr_key
+
