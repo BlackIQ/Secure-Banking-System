@@ -21,6 +21,11 @@ First of all:
 Then:
 1. ``Python3 Server.py``
 2. ``Python3 Client.py``
+### For Cyptography part
+1. ``pip3 install pycryptodome``
+2. ``pip3 install scrypt``
+3. ``pip3 install registry``
+4. ``pip3 install cyptography``
 
 ## [Signup:](https://github.com/arman324/Secure-Banking-System/blob/main/Signup.py)
 ### Signup class features:
