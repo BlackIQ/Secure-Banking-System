@@ -202,32 +202,38 @@ class MysqlConnection:
 		self.cursor.execute("select ID from users where username = %s",(username,))
 		uids = self.cursor.fetchone()
 		user_id = uids[0]
-
-		self.cursor.execute("select amount from accounts where account_no = %s",(from_account,))
-		ams = self.cursor.fetchone()
-		if ams != None:
-			cur_amount = ams[0]
-			if float(cur_amount) < float(amount):
-				response = 'Source account balance is not enough.'
-			else:
-				self.cursor.execute("select amount from accounts where account_no = %s",(to_account,))
-				tms = self.cursor.fetchone()
-				to_cur_amount = ''
-				if tms != None:
-					to_cur_amount = tms[0]
-
-					self.cursor.execute('update accounts set amount = %s where  account_no = %s ',(float(cur_amount)-float(amount),from_account))
-					self.cnx.commit()
-
-					self.cursor.execute('update accounts set amount = %s where  account_no = %s ',(float(to_cur_amount)+float(amount),to_account))
-					self.cnx.commit()
-					self.cursor.execute('Insert into transactions(to_account, from_account, amount) VALUES (\'%s\',\'%s\',\'%s\');' %(to_account,from_account,amount,))
-					self.cnx.commit()
-					response = f"Successful Transaction. Current Balance = {float(cur_amount)-float(amount)}"
+  
+		self.cursor.execute("select account_no from account_user where account_no = %s and user_id = %s",(from_account,user_id,))
+		j = self.cursor.fetchone()
+		is_joint = j[0]
+		if is_joint != None:
+			self.cursor.execute("select amount from accounts where account_no = %s",(from_account,))
+			ams = self.cursor.fetchone()
+			if ams != None:
+				cur_amount = ams[0]
+				if float(cur_amount) < float(amount):
+					response = 'Source account balance is not enough.'
 				else:
-					response = f"Destination Account Number Not Found."
+					self.cursor.execute("select amount from accounts where account_no = %s",(to_account,))
+					tms = self.cursor.fetchone()
+					to_cur_amount = ''
+					if tms != None:
+						to_cur_amount = tms[0]
+
+						self.cursor.execute('update accounts set amount = %s where  account_no = %s ',(float(cur_amount)-float(amount),from_account))
+						self.cnx.commit()
+
+						self.cursor.execute('update accounts set amount = %s where  account_no = %s ',(float(to_cur_amount)+float(amount),to_account))
+						self.cnx.commit()
+						self.cursor.execute('Insert into transactions(to_account, from_account, amount) VALUES (\'%s\',\'%s\',\'%s\');' %(to_account,from_account,amount,))
+						self.cnx.commit()
+						response = f"Successful Transaction. Current Balance = {float(cur_amount)-float(amount)}"
+					else:
+						response = f"Destination Account Number Not Found."
+			else:
+				response = f"Source Account Number Not Found."
 		else:
-			response = f"Source Account Number Not Found."
+				response = f"You Are Not Joint To This Account"
 
 
 
