@@ -232,9 +232,69 @@ class MysqlConnection:
 
 
 		return response
-      
-    
+
+	def get_security_labels(self, username, account_no):
+		response = 'NOPE' # true : acc exists; false: acc doesn't exist.
+		user_integrity_label = -1
+		user_confidentiality_label = -1
+		acc_integrity_label = -1
+		acc_confidentiality_label = -1
   
+		self.cursor.execute("select ID from users where username = %s",(username,))
+		uids = self.cursor.fetchone()
+		user_id = uids[0]   
+		self.cursor.execute("select owner_id from accounts where account_no = %s",(account_no,))
+		tms = self.cursor.fetchone()
+		owner_id=''
+		if tms != None:
+			owner_id = tms[0]
+			self.cursor.execute("select confidentiality_level, integrity_level from accounts where account_no = %s",(account_no,))
+			acc_levels = self.cursor.fetchone()
+			acc_integrity_label = acc_levels[1]
+			acc_confidentiality_label = acc_levels[0]
+
+
+		else:
+			response = f"Account Not Found."
+			user_integrity_label = -1
+			user_confidentiality_label = -1
+			acc_integrity_label = -1
+			acc_confidentiality_label = -1
+			return response, user_integrity_label,user_confidentiality_label,acc_integrity_label,acc_confidentiality_label
+
+		if owner_id == user_id:
+			response = f"OK"
+			user_integrity_label = 4
+			user_confidentiality_label = 1
+			return response, user_integrity_label,user_confidentiality_label,acc_integrity_label,acc_confidentiality_label
+		else:
+			self.cursor.execute('select confidentiality_level, integrity_level from account_user where account_no = %s and user_id = %s and accept_status = 1',(account_no,user_id))
+			levels = self.cursor.fetchone()
+			if levels!=None:
+				user_integrity_label = levels[1]
+				user_confidentiality_label = levels[0]
+				response = f"OK"
+				return response, user_integrity_label,user_confidentiality_label,acc_integrity_label,acc_confidentiality_label
+			else:
+				response = f"Not joint to this account."
+				user_integrity_label = -1
+				user_confidentiality_label = -1
+				acc_integrity_label = -1
+				acc_confidentiality_label = -1
+				return response, user_integrity_label,user_confidentiality_label,acc_integrity_label,acc_confidentiality_label
+
+		
+
+		
+
+
+		
+	
+	
+
+		
+		
+	
 
 
 

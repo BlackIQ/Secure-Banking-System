@@ -27,7 +27,6 @@ class BankingOperation:
         return response
     
     def show_MyAccount(self, username):
-        print(self.AccessControl.sayHelloToAccessControl())
         self.MysqlConnection.mysql_connection()
         account_no, joints = self.MysqlConnection.show_list_of_account(username)
         response = f"1. \033[1m{account_no}\033[0m\n"
@@ -38,33 +37,38 @@ class BankingOperation:
         self.MysqlConnection.close_connection()
         return response
     
-    def show_Account(self,username, account_no):
-        self.MysqlConnection.mysql_connection()
-        account_info,owners,last5_deposits,last5_withdraw = self.MysqlConnection.account_info(username,account_no)
-        response = f"\n\033[1m Creator:\033[0m {account_info[0]}\t\033[1m DateCreated:\033[0m {account_info[1]}\t\033[1m Amount:\033[0m {account_info[2]}\t\033[1m Type:\033[0m {account_info[3]}\n"
-        response = response + "\033[1m Owners:\033[0m\n"
-        for i in range(0,len(owners)):
-            response = response + f"\t{i+1}. {owners[i][0]}\n"
-        
-        response = response + "\033[1m 5 Most Recent Deposits:\033[0m\n"
-        for i in range(0,len(last5_deposits)):
-            response = response + f"\t{i+1}. To: {last5_deposits[i][2]}\tAmount: {last5_deposits[i][3]}\tDate: {last5_deposits[i][4]}\n"
-        
-        response = response + "\033[1m 5 Most Recent Withdraws:\033[0m\n"
-        for i in range(0,len(last5_withdraw)):
-            response = response + f"\t{i+1}. From: {last5_withdraw[i][1]}\tAmount: {last5_withdraw[i][3]}\tDate: {last5_withdraw[i][4]}\n"
-        
-        
-        self.MysqlConnection.close_connection()
-        return response
+    def show_Account(self,username, account_no): #Access Control Needed.
+        status, msg = self.AccessControl.has_read_access(username, account_no)
+         
+        if status:
+            self.MysqlConnection.mysql_connection()
+            account_info,owners,last5_deposits,last5_withdraw = self.MysqlConnection.account_info(username,account_no)
+            response = f"\n\033[1m Creator:\033[0m {account_info[0]}\t\033[1m DateCreated:\033[0m {account_info[1]}\t\033[1m Amount:\033[0m {account_info[2]}\t\033[1m Type:\033[0m {account_info[3]}\n"
+            response = response + "\033[1m Owners:\033[0m\n"
+            for i in range(0,len(owners)):
+                response = response + f"\t{i+1}. {owners[i][0]}\n"
+            
+            response = response + "\033[1m 5 Most Recent Deposits:\033[0m\n"
+            for i in range(0,len(last5_deposits)):
+                response = response + f"\t{i+1}. To: {last5_deposits[i][2]}\tAmount: {last5_deposits[i][3]}\tDate: {last5_deposits[i][4]}\n"
+            
+            response = response + "\033[1m 5 Most Recent Withdraws:\033[0m\n"
+            for i in range(0,len(last5_withdraw)):
+                response = response + f"\t{i+1}. From: {last5_withdraw[i][1]}\tAmount: {last5_withdraw[i][3]}\tDate: {last5_withdraw[i][4]}\n"
+            
+            
+            self.MysqlConnection.close_connection()
+            return response
+        else:
+            return msg
     
-    def deposit(self,owner, to_account, amount):
+    def deposit(self,owner, to_account, amount):#Access Control Needed.
         self.MysqlConnection.mysql_connection()
         response = self.MysqlConnection.deposit_to_account(owner,to_account,amount)
         self.MysqlConnection.close_connection()
         return response
     
-    def withdraw (self, username, from_account, to_account, amount):
+    def withdraw (self, username, from_account, to_account, amount):#Access Control Needed.
         self.MysqlConnection.mysql_connection()
         response = self.MysqlConnection.withdraw(username, from_account, to_account, amount)
         self.MysqlConnection.close_connection()
