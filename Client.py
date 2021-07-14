@@ -3,8 +3,8 @@ import time
 from Cryptography import Encryption_Decryption, Sign_Verify, Private_Keys
 from Symmetric_Cryptography import Symmetric_Cryptography
 from Crypto.Hash import SHA256
-import hashlib
-
+import functools
+import operator
 
 class Client:
     def __init__(self):
@@ -57,7 +57,12 @@ class Client:
 
     def set_session_key(self):
         self.symmetric_key = Symmetric_Cryptography.key_generation()
-        secure_key_to_server = Encryption_Decryption.encryption_server_public_key(self.symmetric_key)
+        signed_key, self.symmetric_key = Sign_Verify.sign_client_private_key(self.symmetric_key)
+        signed_key_int = functools.reduce(operator.add, signed_key)
+        signed_key_bytes = bytes(signed_key_int)
+        digested_key = Symmetric_Cryptography.my_hash(signed_key_bytes)
+        send_to_server = self.symmetric_key + digested_key
+        secure_key_to_server = Encryption_Decryption.encryption_server_public_key(send_to_server)
         self.s.send(secure_key_to_server)
         print("Secure Connection")
 

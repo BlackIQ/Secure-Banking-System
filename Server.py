@@ -13,6 +13,7 @@ class Server:
     def __init__(self, Login, Signup, MysqlConnection, BankingOperation, AccessControl):
         self.session_key = None
         self.check_bytes = b'check'
+        self.authentication = 0
         self.Exit = 0
         self.state = -1
         self.Login = Login
@@ -46,7 +47,6 @@ class Server:
                 self.send_message("Goodbye.")
                 break
             msg = self.c1.recv(4096)
-            print(msg)
             if self.state == -1:
                 self.receive_message_state_negative1(msg)
                 self.state = 0
@@ -183,8 +183,16 @@ Exit\n""")
 
     def receive_message_state_negative1(self, msg):
         secure_key = Encryption_Decryption.decryption_server_private_key(msg)
-        self.session_key = secure_key
-        print("Secure connection is established!")
+        hashed_key = secure_key[len(secure_key) - 32:]
+        key = secure_key[: len(secure_key) - 32]
+        test_hash = Symmetric_Cryptography.my_hash(key)
+        self.authentication = Sign_Verify.verify_client_public_key(hashed_key, test_hash)
+        if self.authentication == 0:
+            print("Authentication is inValid")
+        elif self.authentication == 1:
+            print("Authentication is Valid")
+            self.session_key = key
+            print("Secure connection is established!")
 
 
 server = Server(Login(MysqlConnection()), Signup(MysqlConnection()), MysqlConnection(),

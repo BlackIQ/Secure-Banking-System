@@ -4,6 +4,7 @@ import scrypt
 from Crypto.Cipher import AES
 from Crypto.Util.Padding import pad, unpad
 from Crypto.Hash import Poly1305
+import hashlib
 
 
 class Symmetric_Cryptography:
@@ -48,3 +49,10 @@ class Symmetric_Cryptography:
         except:
             self.authentication = 0
         return self.authentication
+
+    @staticmethod
+    def my_hash(key):
+        hashed = hashlib.new('sha256')
+        hashed.update(key)
+        digest_key = hashed.digest()
+        return digest_key
