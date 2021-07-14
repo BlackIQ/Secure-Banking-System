@@ -3,9 +3,13 @@ import secrets
 import scrypt
 from Crypto.Cipher import AES
 from Crypto.Util.Padding import pad, unpad
+from Crypto.Hash import Poly1305
 
 
 class Symmetric_Cryptography:
+
+    def __init__(self):
+        self.authentication = 0
 
     @staticmethod
     def key_generation():
@@ -19,14 +23,28 @@ class Symmetric_Cryptography:
         aes_enc = AES.new(key, AES.MODE_CBC)
         cipher_text = aes_enc.encrypt(pad(msg, AES.block_size))
         iv = aes_enc.iv
-        return iv, cipher_text
+        return cipher_text + iv
 
     @staticmethod
-    def symmetric_decryption(cipher_txt, key, iv):
+    def symmetric_decryption(cipher_txt, key):
+        iv = cipher_txt[len(cipher_txt) - 16:]
+        cipher_text = cipher_txt[: len(cipher_txt) - 16]
         aes_dec = AES.new(key, AES.MODE_CBC, iv)
-        message = unpad(aes_dec.decrypt(cipher_txt), AES.block_size)
+        message = unpad(aes_dec.decrypt(cipher_text), AES.block_size)
         msg = message.decode('utf-8')
         return msg
 
+    @staticmethod
+    def generate_Poly1305_mac(data, key):
+        mac = Poly1305.new(key=key, cipher=AES, data=data)
+        return mac.hexdigest(), mac.nonce
 
-
+    def verify_Poly1305_mac(self, data, key, nonce, mac_digest):
+        mac_verify = Poly1305.new(data=data, key=key, nonce=nonce,
+                                  cipher=AES)
+        try:
+            mac_verify.hexverify(mac_digest)
+            self.authentication = 1
+        except:
+            self.authentication = 0
+        return self.authentication
