@@ -1,9 +1,11 @@
 from MysqlConnection import MysqlConnection
+from AccessControl import AccessControl
 
 class BankingOperation:
     
-    def __init__(self, MysqlConnection):
+    def __init__(self, MysqlConnection, AccessControl):
         self.MysqlConnection=MysqlConnection
+        self.AccessControl = AccessControl
     
     def create_account (self, username, account_type, amount, conf_label, integrity_label):
         self.MysqlConnection.mysql_connection()
@@ -25,6 +27,7 @@ class BankingOperation:
         return response
     
     def show_MyAccount(self, username):
+        print(self.AccessControl.sayHelloToAccessControl())
         self.MysqlConnection.mysql_connection()
         account_no, joints = self.MysqlConnection.show_list_of_account(username)
         response = f"1. \033[1m{account_no}\033[0m\n"

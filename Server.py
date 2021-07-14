@@ -3,16 +3,18 @@ from Login import Login
 from Signup import Signup
 from MysqlConnection import MysqlConnection
 from BankingOperation import BankingOperation
+from AccessControl import AccessControl
 import time
 
 class Server:
-	def __init__(self, Login, Signup, MysqlConnection, BankingOperation):
+	def __init__(self, Login, Signup, MysqlConnection, BankingOperation,AccessControl):
 		self.Exit = 0
 		self.state = 0
 		self.Login = Login
 		self.Signup = Signup
 		self.MysqlConnection = MysqlConnection
 		self.BankingOperation = BankingOperation
+		self.AccessControl = AccessControl
 		self.start_server()
 		self.c1
 		self.username=''
@@ -162,4 +164,4 @@ Exit\n""")
 			self.send_message("Please use help command")
 
 
-server = Server(Login(MysqlConnection()),Signup(MysqlConnection()),MysqlConnection(),BankingOperation(MysqlConnection()))
+server = Server(Login(MysqlConnection()),Signup(MysqlConnection()),MysqlConnection(),BankingOperation(MysqlConnection(),AccessControl(MysqlConnection())),AccessControl(MysqlConnection()))
