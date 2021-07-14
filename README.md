@@ -11,7 +11,7 @@
 * Python 3.x
 * import cryptography  -> ``pip3 install cryptography``
 * import mysql.connector -> ``python3 -m pip install mysql-connector``
-#### For Cyptography part
+#### For Cryptography part
 1. ``pip3 install pycryptodome``
 2. ``pip3 install scrypt``
 3. ``pip3 install registry``
