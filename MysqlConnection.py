@@ -234,7 +234,7 @@ class MysqlConnection:
 		return response
 
 	def get_security_labels(self, username, account_no):
-		response = 'NOPE' # true : acc exists; false: acc doesn't exist.
+		response = 'NOPE' 
 		user_integrity_label = -1
 		user_confidentiality_label = -1
 		acc_integrity_label = -1
@@ -252,20 +252,19 @@ class MysqlConnection:
 			acc_levels = self.cursor.fetchone()
 			acc_integrity_label = acc_levels[1]
 			acc_confidentiality_label = acc_levels[0]
-
-
 		else:
 			response = f"Account Not Found."
 			user_integrity_label = -1
 			user_confidentiality_label = -1
 			acc_integrity_label = -1
 			acc_confidentiality_label = -1
-			return response, user_integrity_label,user_confidentiality_label,acc_integrity_label,acc_confidentiality_label
+			return response, user_integrity_label, user_confidentiality_label, acc_integrity_label, acc_confidentiality_label
+
 
 		if owner_id == user_id:
 			response = f"OK"
-			user_integrity_label = 4
-			user_confidentiality_label = 1
+			user_integrity_label = 1
+			user_confidentiality_label = 4
 			return response, user_integrity_label,user_confidentiality_label,acc_integrity_label,acc_confidentiality_label
 		else:
 			self.cursor.execute('select confidentiality_level, integrity_level from account_user where account_no = %s and user_id = %s and accept_status = 1',(account_no,user_id))

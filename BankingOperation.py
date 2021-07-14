@@ -40,7 +40,7 @@ class BankingOperation:
     def show_Account(self,username, account_no): #Access Control Needed.
         status, msg = self.AccessControl.has_read_access(username, account_no)
          
-        if status:
+        if status == 1:
             self.MysqlConnection.mysql_connection()
             account_info,owners,last5_deposits,last5_withdraw = self.MysqlConnection.account_info(username,account_no)
             response = f"\n\033[1m Creator:\033[0m {account_info[0]}\t\033[1m DateCreated:\033[0m {account_info[1]}\t\033[1m Amount:\033[0m {account_info[2]}\t\033[1m Type:\033[0m {account_info[3]}\n"
