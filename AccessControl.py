@@ -15,8 +15,10 @@ class AccessControl:
             return 0,response
         else:
             if user_integrity_label >= acc_integrity_label and user_confidentiality_label <= acc_confidentiality_label:
+                self.MysqlConnection.record_log(username, 'read_access', 'Allowed', None, account_no, None)
                 return 1, response
             else:
+                self.MysqlConnection.record_log(username, 'write_access', 'Denied', None, account_no, None)
                 return 0, "Write Access Denied."
     
     def has_read_access(self, username, account_no):
@@ -27,10 +29,11 @@ class AccessControl:
             return 0,response
         else:
             if user_integrity_label <= acc_integrity_label and user_confidentiality_label >= acc_confidentiality_label:
+                self.MysqlConnection.record_log(username, 'read_access', 'Allowed', None, account_no, None)
                 return 1, response
             else:
+                self.MysqlConnection.record_log(username, 'read_access', 'Denied', None, account_no, None)
                 return 0, "Read Access Denied."
 
         
-    
     
