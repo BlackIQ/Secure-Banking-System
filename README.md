@@ -15,7 +15,7 @@
 1. ``pip3 install pycryptodome``
 2. ``pip3 install scrypt``
 3. ``pip3 install registry``
-4. ``pip3 install cyptography``
+4. ``pip3 install cryptography``
 
 ## How to Run
 First of all:
