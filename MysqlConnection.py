@@ -115,10 +115,15 @@ class MysqlConnection:
                 response = f"You Have Already Requested to Join This Account."
 
         else:
-            self.cursor.execute(
-                'Insert into account_user(account_no, user_id) VALUES (\'%s\',\'%s\');' % (account_no, user_id,))
-            self.cnx.commit()
-            response = f"Join Request Sent to Account Owner."
+            self.cursor.execute("select amount from accounts where account_no = %s",(account_no,))
+            acc = self.cursor.fetchone()
+            if acc != None:
+                self.cursor.execute(
+                    'Insert into account_user(account_no, user_id) VALUES (\'%s\',\'%s\');' % (account_no, user_id,))
+                self.cnx.commit()
+                response = f"Join Request Sent to Account Owner."
+            else:
+                response = f"Account Not Found"
 
         return response
 
@@ -145,38 +150,64 @@ class MysqlConnection:
         user_id = uids[0]
         self.cursor.execute("select account_no from accounts where owner_id = %s", (user_id,))
         nos = self.cursor.fetchone()
-        account_no = nos[0]
-        self.cursor.execute("select account_no from account_user where user_id = %s and accept_status = 1", (user_id,))
-        joints = self.cursor.fetchall()
-        return account_no, joints
+        if nos!= None:
+            account_no = nos[0]
+            self.cursor.execute("select account_no from account_user where user_id = %s and accept_status = 1", (user_id,))
+            joints = self.cursor.fetchall()
+            return account_no, joints
+        else:
+            return "No Accounts Found.",''
 
     def account_info(self, username, account_no):
-        self.cursor.execute("select ID from users where username = %s", (username,))
-        uids = self.cursor.fetchone()
-        user_id = uids[0]
-        query1 = """select users.username,accounts.DateCreated,accounts.amount,account_type.title
-					from accounts inner join users on accounts.owner_id = users.ID 
-					inner join account_type on account_type.ID = accounts.account_type_id
-					where accounts.account_no = %s"""
-        self.cursor.execute(query1, (account_no,))
-        account_info = self.cursor.fetchone()
-        query2 = """select users.username
-					from account_user inner join users on account_user.user_id = users.ID 
-					where account_user.account_no = %s and account_user.accept_status = 1"""
-        self.cursor.execute(query2, (account_no,))
-        owners = self.cursor.fetchall()
-        query3 = """select *
-					from transactions 
-					where from_account = %s order by transaction_date DESC limit 5"""
-        self.cursor.execute(query3, (account_no,))
-        last5_deposits = self.cursor.fetchall()
-        query4 = """select *
-					from transactions 
-					where to_account = %s order by transaction_date DESC limit 5"""
-        self.cursor.execute(query4, (account_no,))
-        last5_withdraw = self.cursor.fetchall()
+        self.cursor.execute('select amount from accounts where account_no=%s',(account_no))
+        accexists = self.cursor.fetchone()
+        if accexists != None:
+            self.cursor.execute("select ID from users where username = %s", (username,))
+            uids = self.cursor.fetchone()
+            user_id = uids[0]
+            query1 = """select users.username,accounts.DateCreated,accounts.amount,account_type.title
+                        from accounts inner join users on accounts.owner_id = users.ID 
+                        inner join account_type on account_type.ID = accounts.account_type_id
+                        where accounts.account_no = %s"""
+            self.cursor.execute(query1, (account_no,))
+            account_info = self.cursor.fetchone()
+            # account_info=''
+            # if acci!= None:
+            #     account_info = acci
+            
+            
+            query2 = """select users.username
+                        from account_user inner join users on account_user.user_id = users.ID 
+                        where account_user.account_no = %s and account_user.accept_status = 1"""
+            self.cursor.execute(query2, (account_no,))
+            owners = self.cursor.fetchall()
+            # owners =''
+            # if len(os)>0:
+            #     owners = os 
+        
+            
+            query3 = """select *
+                        from transactions 
+                        where from_account = %s order by transaction_date DESC limit 5"""
+            self.cursor.execute(query3, (account_no,))
+            last5_deposits = self.cursor.fetchall()
+            # last5_deposits = ''
+            # if len(last5)>0:
+            #     last5_deposits = last5
+            
+            query4 = """select *
+                        from transactions 
+                        where to_account = %s order by transaction_date DESC limit 5"""
+            self.cursor.execute(query4, (account_no,))
+            last5_withdraw = self.cursor.fetchall()
+            # last5_withdraw=''
+            # if len(last5w)>0:
+            #     last5_withdraw = last5w
 
-        return account_info, owners, last5_deposits, last5_withdraw
+            return account_info, owners, last5_deposits, last5_withdraw
+        else:
+            return 'Account Not Found', '', '', ''
+            
 
     def deposit_to_account(self, owner, to_account, amount):
         response = ''
