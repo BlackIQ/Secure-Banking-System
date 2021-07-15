@@ -196,4 +196,5 @@ Exit\n""")
 
 
 server = Server(Login(MysqlConnection()), Signup(MysqlConnection()), MysqlConnection(),
-                BankingOperation(MysqlConnection()), AccessControl(MysqlConnection()))
+                BankingOperation(MysqlConnection(),AccessControl(MysqlConnection())), AccessControl(MysqlConnection()))
+
