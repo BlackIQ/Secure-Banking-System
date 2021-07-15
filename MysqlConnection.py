@@ -11,7 +11,7 @@ class MysqlConnection:
         self.cursor
 
     def mysql_connection(self):
-        self.cnx = mysql.connector.connect(user='ghze', password='Ghze12345#',
+        self.cnx = mysql.connector.connect(user='root', password='10101010',
                                            host='127.0.0.1',
                                            database='secure_banking_system')
         self.cursor = self.cnx.cursor(buffered=True)
