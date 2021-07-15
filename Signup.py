@@ -4,6 +4,7 @@ import hashlib
 from MysqlConnection import MysqlConnection
 import re
 
+
 class Signup:
     def __init__(self, MysqlConnection):
         self.MysqlConnection = MysqlConnection
@@ -20,16 +21,21 @@ class Signup:
 
         if valid_username == 0:
             response = "This username exists. Please select another username."
+            self.MysqlConnection.record_log(username, 'Signup', 'fail')
         elif valid_password == 0:
             response = "Your password is short. It needs to be at least 8 characters."
+            self.MysqlConnection.record_log(username, 'Signup', 'fail')
         elif valid_password == -1:
             response = "Your password is weak. Please Use numbers, uppercase and lowercase letters in your password."
+            self.MysqlConnection.record_log(username, 'Signup', 'fail')
         elif valid_password == -2:
             response = "Your password is weak. Password should have at least one of the symbols $ or _ or @"
+            self.MysqlConnection.record_log(username, 'Signup', 'fail')
         elif valid_password == -3:
             response = "Your password is weak. Your password should not contain your username."
+            self.MysqlConnection.record_log(username, 'Signup', 'fail')
         else:
-            salt = self.base64_encode(os.urandom(12)) #Generate 12 bytes salt
+            salt = self.base64_encode(os.urandom(12))  # Generate 12 bytes salt
             passwordWithSalt = salt + password
 
             m = hashlib.sha256()
@@ -39,7 +45,7 @@ class Signup:
             self.MysqlConnection.insert_into_table(username, password_hash, salt, 1, 1, 1, 0)
 
             response = "You have successfully Signed up. Now you can Login."
-
+            self.MysqlConnection.record_log(username, 'Signup', 'successful')
 
         self.MysqlConnection.close_connection()
         return response
@@ -60,3 +66,4 @@ class Signup:
         if username in password:
             valid = -3
         return valid
+
