@@ -4,6 +4,7 @@ import hashlib
 from MysqlConnection import MysqlConnection
 import re
 
+
 class Login:
     def __init__(self, MysqlConnection):
         self.MysqlConnection = MysqlConnection
@@ -14,33 +15,40 @@ class Login:
 
         if valid_username == 1:
             response = "This username does not exist. If you don't have an account, you need to signup."
+            self.MysqlConnection.record_log(username, 'Login', 'fail')
         else:
             block_informaiton = self.backoff_mechanism(username)
             correct_password = self.check_the_input_password(password, username)
-            if correct_password == 1: # password is currect
+            if correct_password == 1:  # password is currect
                 response = "You have successfully Logged in. You can use help command for more information."
+                self.MysqlConnection.record_log(username, 'Login', 'successful')
                 self.MysqlConnection.reset_number_of_attempts_and_is_block(username)
-                #go to next state
+                # go to next state
 
-            elif correct_password == 0: # password is not currect
-                if block_informaiton == 0: #Account is not block. Attempt number < 3
+            elif correct_password == 0:  # password is not currect
+                if block_informaiton == 0:  # Account is not block. Attempt number < 3
                     response = "The input password is incorrect."
                     self.MysqlConnection.increase_number_of_attempts_and_is_block(username)
+                    self.MysqlConnection.record_log(username, 'Login', 'fail')
 
-                elif block_informaiton == 1: #Account is block for 1 minute. Attempt number = 3
-                     self.MysqlConnection.increase_number_of_attempts_and_is_block(username)
-                     response = "The input password is incorrect. Your account is block for 1 minute."
+                elif block_informaiton == 1:  # Account is block for 1 minute. Attempt number = 3
+                    self.MysqlConnection.increase_number_of_attempts_and_is_block(username)
+                    response = "The input password is incorrect. Your account is block for 1 minute."
+                    self.MysqlConnection.record_log(username, 'Login', 'fail')
 
-                elif block_informaiton == 2: #Account is block for 2 minutes. Attempt number = 4
-                     self.MysqlConnection.increase_number_of_attempts_and_is_block(username)
-                     response = "The input password is incorrect. Your account is block for 2 minutes."
+                elif block_informaiton == 2:  # Account is block for 2 minutes. Attempt number = 4
+                    self.MysqlConnection.increase_number_of_attempts_and_is_block(username)
+                    response = "The input password is incorrect. Your account is block for 2 minutes."
+                    self.MysqlConnection.record_log(username, 'Login', 'fail')
 
-                elif block_informaiton == 3: #Account is block for 4 minutes. Attempt number = 5
-                     self.MysqlConnection.increase_number_of_attempts_and_is_block(username)
-                     response = "The input password is incorrect. Your account is block for 4 minutes."
+                elif block_informaiton == 3:  # Account is block for 4 minutes. Attempt number = 5
+                    self.MysqlConnection.increase_number_of_attempts_and_is_block(username)
+                    response = "The input password is incorrect. Your account is block for 4 minutes."
+                    self.MysqlConnection.record_log(username, 'Login', 'fail')
 
-                else: #Account is block. Attempt number >= 6 => Honeypot
+                else:  # Account is block. Attempt number >= 6 => Honeypot
                     response = "You are in the honeypot :)"
+                    self.MysqlConnection.record_log(username, 'Login', 'honeypot')
                     # honeypot()
 
         self.MysqlConnection.close_connection()
@@ -51,7 +59,7 @@ class Login:
 
         for i in hash_and_salt:
             result = i
-        hash , salt = result
+        hash, salt = result
 
         passwordWithSalt = salt + password
 
@@ -72,7 +80,7 @@ class Login:
         for i in block_informaiton:
             result = i
 
-        number_of_attempts , is_block = result
+        number_of_attempts, is_block = result
 
         block_info = 0
 
