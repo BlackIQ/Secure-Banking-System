@@ -3,6 +3,7 @@ from Login import Login
 from Signup import Signup
 from MysqlConnection import MysqlConnection
 from BankingOperation import BankingOperation
+from BankingOperationHoneyPot import BankingOperationHoneyPot
 from AccessControl import AccessControl
 import time
 from Cryptography import Encryption_Decryption, Sign_Verify, Private_Keys
@@ -10,7 +11,7 @@ from Symmetric_Cryptography import Symmetric_Cryptography
 
 
 class Server:
-    def __init__(self, Login, Signup, MysqlConnection, BankingOperation, AccessControl):
+    def __init__(self, Login, Signup, MysqlConnection, BankingOperation, AccessControl, BankingOperationHoneyPot):
         self.session_key = None
         self.check_bytes = b'check'
         self.authentication = 0
@@ -20,6 +21,7 @@ class Server:
         self.Signup = Signup
         self.MysqlConnection = MysqlConnection
         self.BankingOperation = BankingOperation
+        self.BankingOperationHoneyPot = BankingOperationHoneyPot
         self.AccessControl = AccessControl
         self.start_server()
         self.c1
@@ -50,6 +52,9 @@ class Server:
             if self.state == -1:
                 self.receive_message_state_negative1(msg)
                 self.state = 0
+            elif self.state == 2: ## for HONEYPOT
+                decrypt_msg = Symmetric_Cryptography.symmetric_decryption(msg, self.session_key)
+                self.receive_message_state_2(decrypt_msg)
             elif self.state == 1:
                 decrypt_msg = Symmetric_Cryptography.symmetric_decryption(msg, self.session_key)
                 self.receive_message_state_1(decrypt_msg)
@@ -89,16 +94,19 @@ class Server:
             if len(Parts) == 3:
                 response = self.Login.login(Parts[1], Parts[2])
                 self.send_message(response)
-                if "Logged in" in response:
+                if "Welcome" in response:
+                    self.state = 2
+                    self.username = Parts[1]
+                elif "Logged in" in response:
                     self.state = 1
                     self.username = Parts[1]
                 # self.password = Parts[2]
                 if "1" in response:
-                    time.sleep(60)  # delays for 1 minute
+                    time.sleep(4)  # delays for 1 minute
                 elif "2" in response:
-                    time.sleep(120)  # delays for 2 minutes
+                    time.sleep(4)  # delays for 2 minutes
                 elif "4" in response:
-                    time.sleep(240)  # delays for 4 minutes
+                    time.sleep(4)  # delays for 4 minutes
             else:
                 self.send_message("Incorrect arguments. Please use help command")
 
@@ -181,6 +189,80 @@ Exit\n""")
         else:
             self.send_message("Please use help command")
 
+    def receive_message_state_2(self, inputCommand):  # this state is for HONEYPOT
+        print("Input command:", inputCommand)
+
+        Parts = inputCommand.split()
+
+        if Parts[0] == "Help" or Parts[0] == "help":
+            self.send_message("""\nCreate [account_type] [amount] [conf_label] [integrity_label]\n\t
+[account_type] : \n\t\t1:Short-term deposit\n\t\t2:Long-term deposit\n\t\t3:Current\n\t\t4:Interest-free\n\t
+[conf_label] : \n\t\t1:Unclassified\n\t\t2:Confidential\n\t\t3:Secret\n\t\t4:Top Secret\n\t
+[integrity_label] : \n\t\t1:UnTrusted\n\t\t2:SlightlyTrusted\n\t\t3:Trusted\n\t\t4:VeryTrusted\n
+Join [account_no]
+Accept [username] [conf_label] [integrity_label]
+Show_MyAccount
+Show_Account [account_no]
+Deposit  [to_account_no] [amount]
+Withdraw [from_account_no] [to_account_no] [amount]
+Exit\n""")
+
+        elif Parts[0] == "Create" or Parts[0] == "create":
+            if len(Parts) == 5:
+                response = self.BankingOperationHoneyPot.create_account(self.username, Parts[1], Parts[2], Parts[3], Parts[4])
+                self.send_message(response)
+            else:
+                self.send_message("Incorrect arguments. Please use help command")
+
+        elif Parts[0] == "Join" or Parts[0] == "join":
+            if len(Parts) == 2:
+                response = self.BankingOperationHoneyPot.join(self.username, Parts[1])
+                self.send_message(response)
+            else:
+                self.send_message("Incorrect arguments. Please use help command")
+
+        elif Parts[0] == "Accept" or Parts[0] == "accept":
+            if len(Parts) == 4:
+                response = self.BankingOperationHoneyPot.accept(self.username, Parts[1], Parts[2], Parts[3])
+                self.send_message(response)
+            else:
+                self.send_message("Incorrect arguments. Please use help command")
+
+        elif Parts[0] == "Show_MyAccount" or Parts[0] == "show_MyAccount":
+            if len(Parts) == 1:
+                response = self.BankingOperationHoneyPot.show_MyAccount(self.username)
+                self.send_message(response)
+            else:
+                self.send_message("Incorrect arguments. Please use help command")
+
+        elif Parts[0] == "Show_Account" or Parts[0] == "show_Account":
+            if len(Parts) == 2:
+                response = self.BankingOperationHoneyPot.show_Account(self.username, Parts[1])
+                self.send_message(response)
+            else:
+                self.send_message("Incorrect arguments. Please use help command")
+
+        elif Parts[0] == "Deposit" or Parts[0] == "deposit":
+            if len(Parts) == 3:
+                response = self.BankingOperationHoneyPot.deposit(self.username, Parts[1], Parts[2])
+                self.send_message(response)
+            else:
+                self.send_message("Incorrect arguments. Please use help command")
+
+        elif Parts[0] == "Withdraw" or Parts[0] == "withdraw":
+            if len(Parts) == 4:
+                response = self.BankingOperationHoneyPot.withdraw(self.username, Parts[1], Parts[2], Parts[3])
+                self.send_message(response)
+            else:
+                self.send_message("Incorrect arguments. Please use help command")
+
+        elif Parts[0] == "Exit" or Parts[0] == "exit":
+            self.Exit = 1
+
+        else:
+            self.send_message("Please use help command")
+
+
     def receive_message_state_negative1(self, msg):
         secure_key = Encryption_Decryption.decryption_server_private_key(msg)
         hashed_key = secure_key[len(secure_key) - 32:]
@@ -196,4 +278,4 @@ Exit\n""")
 
 
 server = Server(Login(MysqlConnection()), Signup(MysqlConnection()), MysqlConnection(),
-                BankingOperation(MysqlConnection(), AccessControl(MysqlConnection())), AccessControl(MysqlConnection()))
+                BankingOperation(MysqlConnection(), AccessControl(MysqlConnection())), AccessControl(MysqlConnection()), BankingOperationHoneyPot(MysqlConnection()))

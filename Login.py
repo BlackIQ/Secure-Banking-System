@@ -46,8 +46,8 @@ class Login:
                     response = "The input password is incorrect. Your account is block for 4 minutes."
                     self.MysqlConnection.record_log(username, 'Login', 'fail')
 
-                else:  # Account is block. Attempt number >= 6 => Honeypot
-                    response = "You are in the honeypot :)"
+                else:  # Account is block. Attempt number >= 6 => ** Honeypot **
+                    response = "Welcome. You have successfully Logged in. You can use help command for more information." ##### HONEYPOT
                     self.MysqlConnection.record_log(username, 'Login', 'honeypot')
                     # honeypot()
 
@@ -96,4 +96,3 @@ class Login:
             block_info = 4
 
         return block_info
-
