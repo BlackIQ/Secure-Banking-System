@@ -20,7 +20,7 @@ class BankingOperation:
     def join(self, username, account_no):
         self.MysqlConnection.mysql_connection()
         response = self.MysqlConnection.add_join_request(username, account_no)
-        self.MysqlConnection.record_log(username, 'Join', 'Successful', account_no)
+        self.MysqlConnection.record_log(username, 'Join', 'Successful', None,account_no)
         self.MysqlConnection.close_connection()
         return response
 
@@ -62,7 +62,7 @@ class BankingOperation:
             response = response + "\033[1m 5 Most Recent Withdraws:\033[0m\n"
             for i in range(0, len(last5_withdraw)):
                 response = response + f"\t{i + 1}. From: {last5_withdraw[i][1]}\tAmount: {last5_withdraw[i][3]}\tDate: {last5_withdraw[i][4]}\n"
-            self.MysqlConnection.record_log(username, 'Show_Account', 'Successful', account_no)
+            self.MysqlConnection.record_log(username, 'Show_Account', 'Successful', None, account_no)
             self.MysqlConnection.close_connection()
             return response
         else:
@@ -71,7 +71,7 @@ class BankingOperation:
     def deposit(self, owner, to_account, amount):  # Access Control Needed.
         self.MysqlConnection.mysql_connection()
         response = self.MysqlConnection.deposit_to_account(owner, to_account, amount)
-        self.MysqlConnection.record_log(owner, 'Deposit', 'Successful', amount, owner, to_account)
+        self.MysqlConnection.record_log(owner, 'Deposit', 'Successful', amount, None, to_account)
         self.MysqlConnection.close_connection()
         return response
 
