@@ -114,7 +114,7 @@ class Server:
         Parts = inputCommand.split()
 
         if Parts[0] == "Help" or Parts[0] == "help":
-            self.send_message("""\nCreate [account_type] [amount] [conf_label] [integrity_label]\n\t 
+            self.send_message("""\nCreate [account_type] [amount] [conf_label] [integrity_label]\n\t
 [account_type] : \n\t\t1:Short-term deposit\n\t\t2:Long-term deposit\n\t\t3:Current\n\t\t4:Interest-free\n\t
 [conf_label] : \n\t\t1:Unclassified\n\t\t2:Confidential\n\t\t3:Secret\n\t\t4:Top Secret\n\t
 [integrity_label] : \n\t\t1:UnTrusted\n\t\t2:SlightlyTrusted\n\t\t3:Trusted\n\t\t4:VeryTrusted\n
@@ -154,7 +154,7 @@ Exit\n""")
             else:
                 self.send_message("Incorrect arguments. Please use help command")
 
-        elif Parts[0] == "show_Account" or Parts[0] == "show_Account":
+        elif Parts[0] == "Show_Account" or Parts[0] == "show_Account":
             if len(Parts) == 2:
                 response = self.BankingOperation.show_Account(self.username, Parts[1])
                 self.send_message(response)
@@ -197,4 +197,3 @@ Exit\n""")
 
 server = Server(Login(MysqlConnection()), Signup(MysqlConnection()), MysqlConnection(),
                 BankingOperation(MysqlConnection(), AccessControl(MysqlConnection())), AccessControl(MysqlConnection()))
-
