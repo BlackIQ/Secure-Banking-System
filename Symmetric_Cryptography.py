@@ -56,3 +56,4 @@ class Symmetric_Cryptography:
         hashed.update(key)
         digest_key = hashed.digest()
         return digest_key
+

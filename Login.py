@@ -96,3 +96,4 @@ class Login:
             block_info = 4
 
         return block_info
+

@@ -66,7 +66,9 @@ class BankingOperation:
             self.MysqlConnection.close_connection()
             return response
         else:
+            self.MysqlConnection.record_log(username, 'Show_Account', 'fail', None, account_no)
             return msg
+        self.MysqlConnection.close_connection()
 
     def deposit(self, owner, to_account, amount):  # Access Control Needed.
         self.MysqlConnection.mysql_connection()
@@ -81,10 +83,13 @@ class BankingOperation:
             self.MysqlConnection.mysql_connection()
             response = self.MysqlConnection.withdraw(username, from_account, to_account, amount)
             self.MysqlConnection.record_log(username, 'Withdraw', 'Successful', amount, from_account, to_account)
-            self.MysqlConnection.close_connection()
+
             return response
         else:
+            self.MysqlConnection.record_log(username, 'Withdraw', 'fail', amount, from_account, to_account)
             return msg
+
+        self.MysqlConnection.close_connection()
 
 
 

@@ -65,7 +65,7 @@ class Server:
             self.c1.send(msg_secure)
             print("Successfully sent")
         else:
-            message = message.encode()
+            message = message.encode('ascii')
             msg_secure = Symmetric_Cryptography.symmetric_encryption(message, self.session_key)
             self.c1.send(msg_secure)
             print("Successfully sent")
@@ -196,5 +196,5 @@ Exit\n""")
 
 
 server = Server(Login(MysqlConnection()), Signup(MysqlConnection()), MysqlConnection(),
-                BankingOperation(MysqlConnection(),AccessControl(MysqlConnection())), AccessControl(MysqlConnection()))
+                BankingOperation(MysqlConnection(), AccessControl(MysqlConnection())), AccessControl(MysqlConnection()))
 

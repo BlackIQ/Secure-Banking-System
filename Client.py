@@ -43,7 +43,7 @@ class Client:
             msg_secure = Symmetric_Cryptography.symmetric_encryption(message, self.symmetric_key)
             self.s.send(msg_secure)
         else:
-            message = message.encode()
+            message = message.encode('ascii')
             msg_secure = Symmetric_Cryptography.symmetric_encryption(message, self.symmetric_key)
             self.s.send(msg_secure)
 
@@ -68,3 +68,4 @@ class Client:
 
 
 client = Client()
+

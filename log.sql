@@ -8,4 +8,3 @@ CREATE TABLE log(
     to_account bigint unsigned
 
 );
-

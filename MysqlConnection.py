@@ -340,3 +340,4 @@ class MysqlConnection:
                     who, readable_time, action, status, amount, from_account, to_account))
             self.cnx.commit()
 
+
