@@ -40,6 +40,7 @@ Then:
 ## [Cryptography:](https://github.com/arman324/Secure-Banking-System/blob/main/Cryptography.py)
 ### Cryptography class features:
 * Symmetric cryptography
+>* Session key -> It will be expired after 5 minutes.
 * Asymmetric cryptography
 
 ## [Access Control:](https://github.com/arman324/Secure-Banking-System/blob/main/AccessControl.py)
