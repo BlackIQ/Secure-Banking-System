@@ -35,6 +35,7 @@ Then:
 ### Login class features:
 * Backoff mechanism for ```Authentication```
 * Changing the state of the system after a user logs in for more security.
+* Implementing Salting [link](https://www.geeksforgeeks.org/implementing-salting/)
 
 ## [Cryptography:](https://github.com/arman324/Secure-Banking-System/blob/main/Cryptography.py)
 ### Cryptography class features:
@@ -63,6 +64,13 @@ Then:
 * Generally, a honeypot consists of data that appears to be a legitimate part of the site and contains information or resources of value to attackers. It is actually isolated, monitored, and capable of blocking or analyzing the attackers. [link](https://en.wikipedia.org/wiki/Honeypot_(computing)) 
 * In this project, the attacker will access fake banking operations after entering the wrong passwords 6 times.
 * Everything is logged in this section to identify the attacker's motive.
+
+## [logging:](https://github.com/arman324/Secure-Banking-System/blob/6acfcfe8c522cd957e8d13a66779544db80c978c/MysqlConnection.py#L375)
+* The purpose of logging is to track error reporting and related data in a centralized way.
+
+<img width="800" alt="Screen Shot 2021-07-16 at 10 47 23 PM" src="https://user-images.githubusercontent.com/35253872/125991697-fdaad7f7-d44a-452d-aabd-49fe0daaa3de.png">
+
+
 
 ## Support
 Reach out to us at:
