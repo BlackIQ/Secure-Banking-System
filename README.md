@@ -12,6 +12,9 @@
 * import cryptography  -> ``pip3 install cryptography``
 * import mysql.connector -> ``python3 -m pip install mysql-connector``
 * from Crypto.Util.Padding import pad, unpad -> ``pip3 install pycryptodome``
+* ``pip3 install pycryptodome``
+* ``pip3 install scrypt``
+* ``pip3 install registry``
 
 ## How to Run
 First of all:
