@@ -135,7 +135,7 @@ Withdraw [from_account_no] [to_account_no] [amount]
 Exit\n""")
 
         elif Parts[0] == "Create" or Parts[0] == "create":
-            if len(Parts) == 5:
+            if len(Parts) == 5 and int(Parts[1]) < 5 and int(Parts[1]) > 0 and int(Parts[3]) < 5 and int(Parts[3]) > 0 and int(Parts[4]) < 5 and int(Parts[4]) > 0:
                 response = self.BankingOperation.create_account(self.username, Parts[1], Parts[2], Parts[3], Parts[4])
                 self.send_message(response)
             else:
