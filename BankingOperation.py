@@ -77,7 +77,10 @@ class BankingOperation:
     def deposit(self, owner, to_account, amount):  # Access Control Needed.
         self.MysqlConnection.mysql_connection()
         response = self.MysqlConnection.deposit_to_account(owner, to_account, amount)
-        self.MysqlConnection.record_log(owner, 'Deposit', 'Successful', amount, None, to_account)
+        if "Successful" in response:
+            self.MysqlConnection.record_log(owner, 'Deposit', 'Successful', amount, None, to_account)
+        else:
+            self.MysqlConnection.record_log(owner, 'Deposit', 'fail', amount, None, to_account)
         self.MysqlConnection.close_connection()
         return response
 
