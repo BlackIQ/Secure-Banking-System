@@ -28,7 +28,9 @@ class Client:
         message = self.s.recv(1024).decode()
         print(message)
         self.set_session_key()
+
         while True:
+
             if self.Exit == 1:
                 break
             message = input('Secure Banking System> ')
@@ -52,6 +54,9 @@ class Client:
         if decrypt_msg == "Goodbye.":
             print(decrypt_msg)
             self.Exit = 1
+        elif "Expired" in decrypt_msg:
+            print(decrypt_msg)
+            self.Exit = 1
         else:
             print(decrypt_msg)
 
@@ -68,4 +73,5 @@ class Client:
 
 
 client = Client()
+
 

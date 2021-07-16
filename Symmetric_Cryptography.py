@@ -5,6 +5,8 @@ from Crypto.Cipher import AES
 from Crypto.Util.Padding import pad, unpad
 from Crypto.Hash import Poly1305
 import hashlib
+from datetime import timedelta
+from datetime import datetime
 
 
 class Symmetric_Cryptography:
@@ -56,4 +58,19 @@ class Symmetric_Cryptography:
         hashed.update(key)
         digest_key = hashed.digest()
         return digest_key
+
+    @staticmethod
+    def generate_expiration_time():
+        current_time = datetime.now()
+        n = 1
+        expiration_time = current_time + timedelta(minutes=n)
+        return expiration_time
+
+    @staticmethod
+    def key_novelty(expiration_time):
+        expired = 0
+        if datetime.now() > expiration_time:
+            print("key is expired")
+            expired = 1
+        return expired
 

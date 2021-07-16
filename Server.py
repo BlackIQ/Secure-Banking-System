@@ -8,6 +8,7 @@ from AccessControl import AccessControl
 import time
 from Cryptography import Encryption_Decryption, Sign_Verify, Private_Keys
 from Symmetric_Cryptography import Symmetric_Cryptography
+from datetime import datetime
 
 
 class Server:
@@ -16,7 +17,9 @@ class Server:
         self.check_bytes = b'check'
         self.authentication = 0
         self.Exit = 0
+        self.expire = 0
         self.state = -1
+        self.expiration_time = datetime.now()
         self.Login = Login
         self.Signup = Signup
         self.MysqlConnection = MysqlConnection
@@ -45,20 +48,28 @@ class Server:
             break
 
         while True:
-            if self.Exit == 1:
+
+            if self.Exit == 1 and self.expire == 0:
                 self.send_message("Goodbye.")
                 break
+            if self.Exit == 1 and self.expire == 1:
+                self.send_message("Your session is Expired. Please Connect again, Then Try.")
+                break
             msg = self.c1.recv(4096)
+            if self.state != -1 and Symmetric_Cryptography.key_novelty(self.expiration_time):
+                self.Exit = 1
+                self.expire = 1
             if self.state == -1:
                 self.receive_message_state_negative1(msg)
+                self.expiration_time = Symmetric_Cryptography.generate_expiration_time()
                 self.state = 0
-            elif self.state == 2: ## for HONEYPOT
+            elif self.state == 2 and self.expire != 1: ## for HONEYPOT
                 decrypt_msg = Symmetric_Cryptography.symmetric_decryption(msg, self.session_key)
                 self.receive_message_state_2(decrypt_msg)
-            elif self.state == 1:
+            elif self.state == 1 and self.expire != 1:
                 decrypt_msg = Symmetric_Cryptography.symmetric_decryption(msg, self.session_key)
                 self.receive_message_state_1(decrypt_msg)
-            else:
+            elif self.state == 0 and self.expire != 1:
                 decrypt_msg = Symmetric_Cryptography.symmetric_decryption(msg, self.session_key)
                 self.receive_message_state_0(decrypt_msg)
 
@@ -77,7 +88,6 @@ class Server:
 
     def receive_message_state_0(self, inputCommand):
         print("Input command:", inputCommand)
-
         Parts = inputCommand.split()
 
         if Parts[0] == "Help" or Parts[0] == "help":
@@ -112,7 +122,6 @@ class Server:
 
         elif Parts[0] == "Exit" or Parts[0] == "exit":
             self.Exit = 1
-
         else:
             self.send_message("Please use help command")
 
@@ -279,3 +288,4 @@ Exit\n""")
 
 server = Server(Login(MysqlConnection()), Signup(MysqlConnection()), MysqlConnection(),
                 BankingOperation(MysqlConnection(), AccessControl(MysqlConnection())), AccessControl(MysqlConnection()), BankingOperationHoneyPot(MysqlConnection()))
+
