@@ -86,8 +86,8 @@ class BankingOperation:
 
     def withdraw(self, username, from_account, to_account, amount):  # Access Control Needed.
         status, msg = self.AccessControl.has_write_access(username, from_account)
+        self.MysqlConnection.mysql_connection()
         if status == 1:
-            self.MysqlConnection.mysql_connection()
             response = self.MysqlConnection.withdraw(username, from_account, to_account, amount)
             self.MysqlConnection.record_log(username, 'Withdraw', 'Successful', amount, from_account, to_account)
 
