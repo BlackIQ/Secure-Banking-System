@@ -36,6 +36,34 @@ Then:
 * Backoff mechanism for ```Authentication```
 * Changing the state of the system after a user logs in for more security.
 
+## [Cryptography:](https://github.com/arman324/Secure-Banking-System/blob/main/Cryptography.py)
+### Cryptography class features:
+* Symmetric cryptography
+* Asymmetric cryptography
+
+## [Access Control:](https://github.com/arman324/Secure-Banking-System/blob/main/AccessControl.py)
+### AccessControl class features:
+* DAC
+* MAC
+>* BLP
+>* BIBA
+
+## [Banking Operationl:](https://github.com/arman324/Secure-Banking-System/blob/main/BankingOperation.py)
+### BankingOperation class features:
+* Create [account_type] [amount] [conf_label] [integrity_label]
+* Join [account_no]
+* Accept [username] [conf_label] [integrity_label]
+* Show_MyAccount
+* Show_Account [account_no]
+* Deposit  [to_account_no] [amount]
+* Withdraw [from_account_no] [to_account_no] [amount]
+
+## [HoneyPot:](https://github.com/arman324/Secure-Banking-System/blob/main/BankingOperationHoneyPot.py)
+### BankingOperationHoneyPot class features:
+* Generally, a honeypot consists of data that appears to be a legitimate part of the site and contains information or resources of value to attackers. It is actually isolated, monitored, and capable of blocking or analyzing the attackers. [link](https://en.wikipedia.org/wiki/Honeypot_(computing)) 
+* In this project, the attacker will access fake banking operations after entering the wrong passwords 6 times.
+* Everything is logged in this section to identify the attacker's motive.
+
 ## Support
 Reach out to us at:
 * riasiarman@yahoo.com
