@@ -20,7 +20,10 @@ class BankingOperation:
     def join(self, username, account_no):
         self.MysqlConnection.mysql_connection()
         response = self.MysqlConnection.add_join_request(username, account_no)
-        self.MysqlConnection.record_log(username, 'Join', 'Successful', None,account_no)
+        if "Account Not Found" in response:
+            self.MysqlConnection.record_log(username, 'Join', 'fail')
+        else:
+            self.MysqlConnection.record_log(username, 'Join', 'Successful')
         self.MysqlConnection.close_connection()
         return response
 
