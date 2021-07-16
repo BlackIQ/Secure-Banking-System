@@ -13,7 +13,7 @@ class MysqlConnection:
     def mysql_connection(self):
         self.cnx = mysql.connector.connect(user='root', password='10101010',
                                            host='127.0.0.1',
-                                           database='Secure_banking_system')
+                                           database='secure_banking_system')
         self.cursor = self.cnx.cursor(buffered=True)
 
     def check_username(self, username):
@@ -89,16 +89,28 @@ class MysqlConnection:
         self.cursor.execute("select ID from users where username = %s", (username,))
         ids = self.cursor.fetchone()
         user_id = ids[0]
-        self.cursor.execute(
-            'INSERT INTO accounts(owner_id, account_type_id, amount, confidentiality_level, integrity_level) VALUES(\'%s\',\'%s\',\'%s\',\'%s\',\'%s\');' % (
-            user_id, account_type, amount, conf_label, integrity_label,))
-        self.cnx.commit()
-        self.cursor.execute(
-            "select account_no from accounts where owner_id = %s and account_type_id = %s and amount = %s and confidentiality_level = %s and integrity_level = %s",
-            (user_id, account_type, amount, conf_label, integrity_label,))
-        nos = self.cursor.fetchone()
-        account_no = nos[0]
-        return account_no
+        self.cursor.execute("select account_no from accounts where owner_id = %s", (user_id,))
+        acids = self.cursor.fetchone()
+        if acids == None: 
+              
+            self.cursor.execute(
+                'INSERT INTO accounts(owner_id, account_type_id, amount, confidentiality_level, integrity_level) VALUES(\'%s\',\'%s\',\'%s\',\'%s\',\'%s\');' % (
+                user_id, account_type, amount, conf_label, integrity_label,))
+            self.cnx.commit()
+            self.cursor.execute(
+                "select account_no from accounts where owner_id = %s and account_type_id = %s and amount = %s and confidentiality_level = %s and integrity_level = %s",
+                (user_id, account_type, amount, conf_label, integrity_label,))
+            nos = self.cursor.fetchone()
+            account_no = nos[0]
+            response = f"Account Created Successfully. Your Account Number is: {account_no}"
+        
+            return response
+        else:
+            acc_id = acids[0]
+            
+            response = f"You have already created  account {acc_id}."
+            return response
+            
 
     def add_join_request(self, username, account_no):
         self.cursor.execute("select ID from users where username = %s", (username,))
@@ -315,14 +327,18 @@ class MysqlConnection:
         self.cursor.execute("select ID from users where username = %s", (username,))
         uids = self.cursor.fetchone()
         user_id = uids[0]
+        # print("userID:",user_id)
         self.cursor.execute("select owner_id from accounts where account_no = %s", (account_no,))
         tms = self.cursor.fetchone()
         owner_id = ''
         if tms != None:
             owner_id = tms[0]
+            # print("ownerid:",owner_id)
+            
             self.cursor.execute("select confidentiality_level, integrity_level from accounts where account_no = %s",
                                 (account_no,))
             acc_levels = self.cursor.fetchone()
+            # print("acc levels:",acc_levels)
             acc_integrity_label = acc_levels[1]
             acc_confidentiality_label = acc_levels[0]
         else:
@@ -334,8 +350,8 @@ class MysqlConnection:
             return response, user_integrity_label, user_confidentiality_label, acc_integrity_label, acc_confidentiality_label
         if owner_id == user_id:
             response = f"OK"
-            user_integrity_label = 1
-            user_confidentiality_label = 4
+            user_integrity_label = acc_integrity_label
+            user_confidentiality_label = acc_confidentiality_label
             return response, user_integrity_label, user_confidentiality_label, acc_integrity_label, acc_confidentiality_label
         else:
             self.cursor.execute(
@@ -345,6 +361,7 @@ class MysqlConnection:
             if levels != None:
                 user_integrity_label = levels[1]
                 user_confidentiality_label = levels[0]
+                # print("user on acc:",levels)
                 response = f"OK"
                 return response, user_integrity_label, user_confidentiality_label, acc_integrity_label, acc_confidentiality_label
             else:

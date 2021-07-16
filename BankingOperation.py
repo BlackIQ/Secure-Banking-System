@@ -10,9 +10,8 @@ class BankingOperation:
 
     def create_account(self, username, account_type, amount, conf_label, integrity_label):
         self.MysqlConnection.mysql_connection()
-        account_no = self.MysqlConnection.create_new_account(username, account_type, amount, conf_label,
+        response = self.MysqlConnection.create_new_account(username, account_type, amount, conf_label,
                                                              integrity_label)
-        response = f"Account Created Successfully. Your Account Number is: {account_no}"
         self.MysqlConnection.record_log(username, 'Create Account', 'Successful', amount)
         self.MysqlConnection.close_connection()
         return response
