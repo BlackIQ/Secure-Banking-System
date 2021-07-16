@@ -27,7 +27,10 @@ class BankingOperation:
     def accept(self, owner, username, conf_label, integrity_label):
         self.MysqlConnection.mysql_connection()
         response = self.MysqlConnection.accept_join_request(owner, username, conf_label, integrity_label)
-        self.MysqlConnection.record_log(username, 'Accept', 'Successful')
+        if "Account Not Found" in response:
+            self.MysqlConnection.record_log(owner, 'Accept', 'fail')
+        else:
+            self.MysqlConnection.record_log(owner, 'Accept', 'Successful')
         self.MysqlConnection.close_connection()
         return response
 
