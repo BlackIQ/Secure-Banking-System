@@ -11,9 +11,9 @@ class MysqlConnection:
         self.cursor
 
     def mysql_connection(self):
-        self.cnx = mysql.connector.connect(user='ghze', password='Ghze12345#',
+        self.cnx = mysql.connector.connect(user='root', password='10101010',
                                            host='127.0.0.1',
-                                           database='secure_banking_system')
+                                           database='Secure_banking_system')
         self.cursor = self.cnx.cursor(buffered=True)
 
     def check_username(self, username):
@@ -133,15 +133,26 @@ class MysqlConnection:
         owner_id = oids[0]
         self.cursor.execute("select ID from users where username = %s", (username,))
         uids = self.cursor.fetchone()
-        user_id = uids[0]
-        self.cursor.execute("select account_no from accounts where owner_id = %s", (owner_id,))
-        nos = self.cursor.fetchone()
-        account_no = nos[0]
-        self.cursor.execute(
-            'update account_user set accept_status = 1, confidentiality_level = %s, integrity_level = %s where  account_no = %s and user_id = %s',
-            (conf_label, integrity_label, account_no, user_id))
-        self.cnx.commit()
-        response = f"User \033[1m{username}\033[0m Joint to Account \033[1m{account_no}\033[0m. "
+        if uids != None:
+            user_id = uids[0]
+            self.cursor.execute("select account_no from accounts where owner_id = %s", (owner_id,))
+            nos = self.cursor.fetchone()
+            if nos != None:
+                account_no = nos[0]
+                self.cursor.execute("select * from account_user where account_no = %s and user_id = %s", (account_no ,user_id,))
+                exist_rq = self.cursor.fetchone()
+                if exist_rq != None:
+                    self.cursor.execute(
+                        'update account_user set accept_status = 1, confidentiality_level = %s, integrity_level = %s where  account_no = %s and user_id = %s',
+                        (conf_label, integrity_label, account_no, user_id))
+                    self.cnx.commit()
+                    response = f"User \033[1m{username}\033[0m Joint to Account \033[1m{account_no}\033[0m. "
+                else:
+                    response = f"Account Not Found. This user didn't send any Join rq."
+            else:
+                response = f"Account Not Found. This user didn't send any Join rq."
+        else:
+            response = f"Account Not Found"
         return response
 
     def show_list_of_account(self, username):
@@ -166,7 +177,7 @@ class MysqlConnection:
             uids = self.cursor.fetchone()
             user_id = uids[0]
             query1 = """select users.username,accounts.DateCreated,accounts.amount,account_type.title
-                        from accounts inner join users on accounts.owner_id = users.ID 
+                        from accounts inner join users on accounts.owner_id = users.ID
                         inner join account_type on account_type.ID = accounts.account_type_id
                         where accounts.account_no = %s"""
             self.cursor.execute(query1, (account_no,))
@@ -174,29 +185,29 @@ class MysqlConnection:
             # account_info=''
             # if acci!= None:
             #     account_info = acci
-            
-            
+
+
             query2 = """select users.username
-                        from account_user inner join users on account_user.user_id = users.ID 
+                        from account_user inner join users on account_user.user_id = users.ID
                         where account_user.account_no = %s and account_user.accept_status = 1"""
             self.cursor.execute(query2, (account_no,))
             owners = self.cursor.fetchall()
             # owners =''
             # if len(os)>0:
-            #     owners = os 
-        
-            
+            #     owners = os
+
+
             query3 = """select *
-                        from transactions 
+                        from transactions
                         where from_account = %s order by transaction_date DESC limit 5"""
             self.cursor.execute(query3, (account_no,))
             last5_deposits = self.cursor.fetchall()
             # last5_deposits = ''
             # if len(last5)>0:
             #     last5_deposits = last5
-            
+
             query4 = """select *
-                        from transactions 
+                        from transactions
                         where to_account = %s order by transaction_date DESC limit 5"""
             self.cursor.execute(query4, (account_no,))
             last5_withdraw = self.cursor.fetchall()
@@ -207,7 +218,7 @@ class MysqlConnection:
             return account_info, owners, last5_deposits, last5_withdraw
         else:
             return 'Account Not Found', '', '', ''
-            
+
 
     def deposit_to_account(self, owner, to_account, amount):
         response = ''
@@ -370,5 +381,3 @@ class MysqlConnection:
                 'INSERT INTO log(username, time_of_action, action, status, amount, from_account, to_account ) VALUES(\'%s\',\'%s\',\'%s\',\'%s\',\'%s\',\'%s\',\'%s\');' % (
                     who, readable_time, action, status, amount, from_account, to_account))
             self.cnx.commit()
-
-

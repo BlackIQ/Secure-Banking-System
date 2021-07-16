@@ -62,7 +62,7 @@ class Symmetric_Cryptography:
     @staticmethod
     def generate_expiration_time():
         current_time = datetime.now()
-        n = 1
+        n = 5
         expiration_time = current_time + timedelta(minutes=n)
         return expiration_time
 
@@ -73,4 +73,3 @@ class Symmetric_Cryptography:
             print("key is expired")
             expired = 1
         return expired
-
