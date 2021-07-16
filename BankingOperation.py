@@ -20,7 +20,7 @@ class BankingOperation:
     def join(self, username, account_no):
         self.MysqlConnection.mysql_connection()
         response = self.MysqlConnection.add_join_request(username, account_no)
-        if "Account Not Found" in response:
+        if "Account Not Found" in response or "Already" in response:
             self.MysqlConnection.record_log(username, 'Join', 'fail')
         else:
             self.MysqlConnection.record_log(username, 'Join', 'Successful')
@@ -51,11 +51,9 @@ class BankingOperation:
 
     def show_Account(self, username, account_no):  # Access Control Needed.
         status, msg = self.AccessControl.has_read_access(username, account_no)
-
+        self.MysqlConnection.mysql_connection()
         if status == 1:
-            self.MysqlConnection.mysql_connection()
-            account_info, owners, last5_deposits, last5_withdraw = self.MysqlConnection.account_info(username,
-                                                                                                     account_no)
+            account_info, owners, last5_deposits, last5_withdraw = self.MysqlConnection.account_info(username, account_no)
             response = f"\n\033[1m Creator:\033[0m {account_info[0]}\t\033[1m DateCreated:\033[0m {account_info[1]}\t\033[1m Amount:\033[0m {account_info[2]}\t\033[1m Type:\033[0m {account_info[3]}\n"
             response = response + "\033[1m Owners:\033[0m\n"
             for i in range(0, len(owners)):

@@ -170,7 +170,7 @@ class MysqlConnection:
             return "No Accounts Found.",''
 
     def account_info(self, username, account_no):
-        self.cursor.execute('select amount from accounts where account_no=%s',(account_no))
+        self.cursor.execute("select amount from accounts where account_no = %s",(account_no,))
         accexists = self.cursor.fetchone()
         if accexists != None:
             self.cursor.execute("select ID from users where username = %s", (username,))
@@ -217,6 +217,7 @@ class MysqlConnection:
 
             return account_info, owners, last5_deposits, last5_withdraw
         else:
+            print("AAGGGGGGAAGGGGGGAAGGGGGGAAGGGGGGAAGGGGGGAAGGGGGG -> 3")
             return 'Account Not Found', '', '', ''
 
 
@@ -329,7 +330,6 @@ class MysqlConnection:
             acc_integrity_label = -1
             acc_confidentiality_label = -1
             return response, user_integrity_label, user_confidentiality_label, acc_integrity_label, acc_confidentiality_label
-
         if owner_id == user_id:
             response = f"OK"
             user_integrity_label = 1
