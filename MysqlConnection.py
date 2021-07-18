@@ -91,8 +91,8 @@ class MysqlConnection:
         user_id = ids[0]
         self.cursor.execute("select account_no from accounts where owner_id = %s", (user_id,))
         acids = self.cursor.fetchone()
-        if acids == None: 
-              
+        if acids == None:
+
             self.cursor.execute(
                 'INSERT INTO accounts(owner_id, account_type_id, amount, confidentiality_level, integrity_level) VALUES(\'%s\',\'%s\',\'%s\',\'%s\',\'%s\');' % (
                 user_id, account_type, amount, conf_label, integrity_label,))
@@ -103,14 +103,14 @@ class MysqlConnection:
             nos = self.cursor.fetchone()
             account_no = nos[0]
             response = f"Account Created Successfully. Your Account Number is: {account_no}"
-        
+
             return response
         else:
             acc_id = acids[0]
-            
+
             response = f"You have already created  account {acc_id}."
             return response
-            
+
 
     def add_join_request(self, username, account_no):
         self.cursor.execute("select ID from users where username = %s", (username,))
@@ -268,7 +268,7 @@ class MysqlConnection:
                 else:
                     response = f"Destination Account Number Not Found."
         else:
-            response = f"You Don't Have Any Account. First of All, Create an Account."                   
+            response = f"You Don't Have Any Account. First of All, Create an Account."
         return response
 
     def withdraw(self, username, from_account, to_account, amount):
@@ -281,8 +281,8 @@ class MysqlConnection:
         self.cursor.execute("select account_no from account_user where account_no = %s and user_id = %s",
                             (from_account, user_id,))
         j = self.cursor.fetchone()
-        is_joint = j[0]
-        if is_joint != None:
+        if j != None:
+            is_joint = j[0]
             self.cursor.execute("select amount from accounts where account_no = %s", (from_account,))
             ams = self.cursor.fetchone()
             if ams != None:
@@ -334,7 +334,7 @@ class MysqlConnection:
         if tms != None:
             owner_id = tms[0]
             # print("ownerid:",owner_id)
-            
+
             self.cursor.execute("select confidentiality_level, integrity_level from accounts where account_no = %s",
                                 (account_no,))
             acc_levels = self.cursor.fetchone()
