@@ -21,8 +21,8 @@ First of all:
 1. ``mysql -u your_username -p your_password``
 2. ``use db_name``
 3. ``source <path_to_sql_file>/secure_banking_system.sql``
-4. `` python3 Public_Private_Keys.py``
-5. `` source log.sql``
+4. `` source <path_to_sql_file>/log.sql``
+5. `` python3 Public_Private_Keys.py`` (This command is not necessary)
 
 Then:
 1. ``Python3 Server.py``
