@@ -1,4 +1,5 @@
 # Secure-Banking-System :)
+
 ## Overview
 ### Common security mechanisms that have been implemented in this project are:
 1. Cryptography 
@@ -7,35 +8,72 @@
 4. Audit
 
 ## Requirements
-* [MySQL](https://www.mysql.com) -> ``sudo apt-get install mysql-server``
-* Python 3.x
-* import cryptography  -> ``pip3 install cryptography``
-* import mysql.connector -> ``python3 -m pip install mysql-connector``
-* from Crypto.Util.Padding import pad, unpad -> ``pip3 install pycryptodome``
-* ``pip3 install pycryptodome``
-* ``pip3 install scrypt``
-* ``pip3 install registry``
+- [MySQL](https://www.mysql.com)
+    - In Linux Distros
+        - Debian | Ubunto : `sudo apt install mysql`
+        - Arch : `sudo pacman -S mariadb`
+        - Fedora : `sudo dnf install mysql-community-server`
+
+- Python 3.x
+
+- Install libraries
+```
+python3 -m pip install mysql-connector
+pip3 install cryptography
+pip3 install scrypt
+pip3 install pycryptodome
+pip3 install scrypt
+pip3 install registry
+```
 
 ## How to Run
 First of all:
-1. ``mysql -u your_username -p your_password``
-2. ``use db_name``
-3. ``source <path_to_sql_file>/secure_banking_system.sql``
-4. `` source <path_to_sql_file>/log.sql``
-5. `` python3 Public_Private_Keys.py`` (This command is not necessary)
+- MySQL configuration
+    - Create a user        
+        - Create User
+        
+        ```mariadb
+        > CREATE USER 'user'@'localhost' IDENTIFIED BY 'password';
+        > GRANT ALL PRIVILEGES ON *.* TO 'user'@'localhost';
+        > FLUSH PRIVILEGES;
+        > exit
+        ```
+        
+        - Rwstart service
 
-Then:
-1. ``Python3 Server.py``
-2. ``Python3 Client.py``
+       `sudo systemctl restart mysql.service`
+
+- Create database and import tables
+    - Create database and use it
+    
+     ```sql
+     CREATE DATABSE db_name;
+     USE db_name;
+     ```
+        
+    - Import sql files
+
+    ```sql
+    SOURCE <path_to_sql_file>/secure_banking_system.sql
+    SOURCE <path_to_sql_file>/log.sql
+     ```
+
+Then run python files:
+```shell
+python3 Public_Private_Keys.py # This command is not necessary
+Python3 Server.py
+Python3 Client.py
+```
+
 
 ## [Signup:](https://github.com/arman324/Secure-Banking-System/blob/main/Signup.py)
 ### Signup class features:
-* Checking the strength of the input password for ```Authentication```
-* Adding Salt and hash the input password for ```Authentication```
+* Checking the strength of the input password for `Authentication`
+* Adding Salt and hash the input password for `Authentication`
 
 ## [Login:](https://github.com/arman324/Secure-Banking-System/blob/main/Login.py)
 ### Login class features:
-* Backoff mechanism for ```Authentication```
+* Backoff mechanism for `Authentication`
 * Changing the state of the system after a user logs in for more security.
 * Implementing Salting [link](https://www.geeksforgeeks.org/implementing-salting/)
 
